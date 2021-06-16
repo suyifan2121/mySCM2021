@@ -1,0 +1,17 @@
+default: &default
+  adapter: mysql2
+  host: localhost
+  username: root
+  password: 
+
+development:
+  <<: *default
+  database: scm_development
+
+test:
+  <<: *default
+  database: scm_test
+
+production:
+  adapter: mysql2
+  database: scm_production
