@@ -6,7 +6,7 @@ class OrdersController < ApplicationController
     @members = Member.all
     @items = Item.all
     @active = Order.active?
-    @expired = Order.expired?
+    # @expired = Order.expired?
   end
 
   def old

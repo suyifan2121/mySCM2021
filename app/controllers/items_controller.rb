@@ -1,4 +1,5 @@
 class ItemsController < ApplicationController
+  load_and_authorize_resource
   before_action :set_item, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -41,6 +42,6 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:item).permit(:name, :category, :quantity, :description, :remaining_quantity)
+    params.require(:item).permit(:name, :category, :price, :description, :remaining_quantity)
   end
 end

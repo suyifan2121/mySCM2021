@@ -6,7 +6,7 @@
       <b>f</b>inv</span>
     <!-- logo for regular state and mobile devices -->
     <span class="logo-lg">
-      <b>MySCM</b>
+      <b>CloudSCM</b>
     </span>
   </a>
   <!-- Header Navbar: style can be found in header.less -->
@@ -60,10 +60,13 @@
         </a>
       </li>
       <li>
-        <a href=" <%= new_item_path %>">
-          <i class="fa fa-plus"></i>
-          <span>Add Item</span>
-        </a>
+        <!-- Only superadmin or sysadmin can do this -->
+        <% if current_user.superadmin_role? || current_user.sysadmin_role? %>
+          <a href=" <%= new_item_path %>">
+            <i class="fa fa-plus"></i>
+            <span>Add Item</span>
+          </a>
+        <% end %>
       </li>
       <li>
         <a href="<%= new_member_path %>">

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210615145510) do
+ActiveRecord::Schema.define(version: 20210617100957) do
 
   create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.integer  "priority",                 default: 0, null: false
@@ -32,9 +32,10 @@ ActiveRecord::Schema.define(version: 20210615145510) do
     t.string   "category"
     t.integer  "quantity"
     t.text     "description",        limit: 65535
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
     t.integer  "remaining_quantity"
+    t.decimal  "price",                            precision: 10, scale: 2
   end
 
   create_table "members", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
@@ -43,6 +44,7 @@ ActiveRecord::Schema.define(version: 20210615145510) do
     t.string   "phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "role"
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
@@ -72,6 +74,11 @@ ActiveRecord::Schema.define(version: 20210615145510) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.string   "phone"
+    t.boolean  "superadmin_role"
+    t.boolean  "sysadmin_role"
+    t.boolean  "inventoryadmin_role"
+    t.boolean  "purchasingagent_role"
+    t.boolean  "salesagent_role"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end

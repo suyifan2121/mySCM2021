@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module MySCMInventory
+module CloudSCMInventory
   class Application < Rails::Application
     config.active_job.queue_adapter = :delayed_job
     # Settings in config/environments/* take precedence over those specified here.
