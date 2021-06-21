@@ -88,7 +88,7 @@
                   </div>
                   <div class="form-group" id="client_name" style="display:none">
                     <label>Client Name</label>
-                    <%= f.text_field :client, class: 'form-control', placeholder: 'Enter Client Name',  required: true %>
+                    <%= f.text_field :client, class: 'form-control', placeholder: 'Enter Client Name',  required: false %>
                   </div>
                 </div>
 
@@ -199,13 +199,19 @@
           // hide fields unrelated to sales
           if(order_type == "sales")
           {
-            $('#client_name').show()
-            $('#supplier_name').hide()
+            $('#client_name').show();
+            $('#supplier_name').hide();
+
+            $('#order_client').attr('required',true);
+            $('#order_supplier').removeAttr('required');
           }
           else 
           {
-            $('#supplier_name').show()
-            $('#client_name').hide()
+            $('#supplier_name').show();
+            $('#client_name').hide();
+
+            $('#order_supplier').attr('required',true);
+            $('#order_client').removeAttr('required');
           }
         });
       }
