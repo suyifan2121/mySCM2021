@@ -44,17 +44,30 @@ class OrdersController < ApplicationController
 
   def new
     @order = Order.new
-    @member = Member.all
+    @active = Order.active?
+    @items = Item.where("remaining_quantity > ?", 0).all
   end
 
   def create
-    if Item.find_by_id(params[:order][:item_id]).remaining_quantity >= params[:order][:quantity].to_i
-      params[:order][:status] = true
-      @order = Order.new(order_params)
+    @items = Item.where("remaining_quantity > ?", 0).all
+    member_id = current_user.member.id
+    order_items = JSON.parse(params[:order][:items])
+
+    ActiveRecord::Base.transaction do
+      order_items.each do |item|
+        if Item.find_by_id(item["id"].to_i).remaining_quantity >= item["quantity"].to_i
+          @ordered_item = Item.find_by_id(item["id"].to_i)
+          @ordered_item.decrement!(:remaining_quantity, item["quantity"].to_i)
+        else
+          flash[:alert] = 'The quantity you entered is not currently available'
+          redirect_to :back
+        end
+      end
+
+      @order = Order.new(order_params.merge(member_id: member_id))
+      puts "attributes: #{@order.attributes}"
       if @order.save
         @current_user = current_user
-        @borrowed_item = Item.find_by_id(params[:order][:item_id])
-        @borrowed_item.decrement!(:remaining_quantity, params[:order][:quantity].to_i)
         redirect_to :root, notice: 'Order was successfully created.'
         begin
           OrderMailer.delay.create_order(@order, @current_user).deliver
@@ -63,10 +76,27 @@ class OrdersController < ApplicationController
       else
         render :new
       end
-    else
-      flash[:alert] = 'The quantity you entered is not currently available'
-      redirect_to :back
     end
+
+    # if Item.find_by_id(params[:order][:item_id]).remaining_quantity >= params[:order][:quantity].to_i
+    #   # params[:order][:status] = true
+    #   @order = Order.new(order_params)
+    #   if @order.save
+    #     @current_user = current_user
+    #     @borrowed_item = Item.find_by_id(params[:order][:item_id])
+    #     @borrowed_item.decrement!(:remaining_quantity, params[:order][:quantity].to_i)
+    #     redirect_to :root, notice: 'Order was successfully created.'
+    #     begin
+    #       OrderMailer.delay.create_order(@order, @current_user).deliver
+    #     rescue Exception => e
+    #     end
+    #   else
+    #     render :new
+    #   end
+    # else
+    #   flash[:alert] = 'The quantity you entered is not currently available'
+    #   redirect_to :back
+    # end
   end
 
   def destroy
@@ -89,6 +119,6 @@ class OrdersController < ApplicationController
     end
 
     def order_params
-      params.require(:order).permit(:quantity, :expire_at, :status, :item_id, :member_id)
+      params.require(:order).permit(:quantity, :expire_at, :status, :member_id, :supplier, :items, :price, :client)
     end
 end

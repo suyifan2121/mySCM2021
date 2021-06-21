@@ -1,10 +1,8 @@
 class Order < ApplicationRecord
-  belongs_to :item
   belongs_to :member
 
   validates :quantity, presence: true
   # validates :expire_at, presence: true
-  validates :item_id, presence: true
   validates :member_id, presence: true
 
   def self.active?
@@ -27,5 +25,10 @@ class Order < ApplicationRecord
   def self.disable id
     @order = Order.where(id: id)
     @order.update(status: false)
+  end
+
+  # custom function to get price to display price in MYR eg. 32.5 -> 32.50
+  def get_price
+    "RM #{sprintf "%.2f", self.price}" unless price.nil?
   end
 end

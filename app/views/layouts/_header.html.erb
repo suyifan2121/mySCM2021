@@ -56,17 +56,37 @@
       <li>
         <a href="<%= past_orders_path %>">
           <i class="fa fa-history"></i>
-          <span>Past Orders</span>
+          <span>Purchase History</span>
+        </a>
+      </li><li>
+        <a href="<%= past_orders_path %>">
+          <i class="fa fa-history"></i>
+          <span>Sales History</span>
         </a>
       </li>
       <li>
-        <!-- Only superadmin or sysadmin can do this -->
-        <% if current_user.superadmin_role? || current_user.sysadmin_role? %>
-          <a href=" <%= new_item_path %>">
+        <!-- remark: only user with item create permission can have access to this menu -->
+        <% if can? :create, Order %>
+          <a href=" <%= new_order_path %>">
             <i class="fa fa-plus"></i>
-            <span>Add Item</span>
+            <span>Create Order</span>
           </a>
         <% end %>
+      </li>
+      <li>
+        <!-- remark: only user with item create permission can have access to this menu -->
+        <% if can? :create, Item %>
+          <a href=" <%= new_item_path %>">
+            <i class="fa fa-plus"></i>
+            <span>Create Commodity</span>
+          </a>
+        <% end %>
+      </li>
+      <li>
+        <a href="<%= new_member_path %>">
+          <i class="fa fa-user-plus"></i>
+          <span>Add Supplier</span>
+        </a>
       </li>
       <li>
         <a href="<%= new_member_path %>">

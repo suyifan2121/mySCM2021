@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210617100957) do
+ActiveRecord::Schema.define(version: 20210621131757) do
 
   create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.integer  "priority",                 default: 0, null: false
@@ -45,17 +45,21 @@ ActiveRecord::Schema.define(version: 20210617100957) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "role"
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_members_on_user_id", using: :btree
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "quantity"
     t.boolean  "status"
-    t.date     "expire_at"
-    t.integer  "item_id"
     t.integer  "member_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_orders_on_item_id", using: :btree
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.string   "supplier"
+    t.string   "client"
+    t.datetime "date"
+    t.decimal  "price",      precision: 10, scale: 2
+    t.string   "items"
     t.index ["member_id"], name: "index_orders_on_member_id", using: :btree
   end
 
@@ -83,6 +87,5 @@ ActiveRecord::Schema.define(version: 20210617100957) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_foreign_key "orders", "items"
   add_foreign_key "orders", "members"
 end

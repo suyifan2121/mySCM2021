@@ -22,6 +22,7 @@ class MembersController < ApplicationController
 
       # update the user role
       set_user_role(params[:member][:role])
+      @user.member = @member
       @user.save
 
       redirect_to :root, notice: 'Member was successfully created.'

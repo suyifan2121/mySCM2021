@@ -105,23 +105,14 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% @active.each do |order| %>
+                    <% @items.each do |order| %>
                     <tr>
                       <td>
-                        <%= order.item.name %>
+                        <%= order.name %>
                       </td>
                       <td><%= order.quantity %></td>
-                      <% if order.expire_at.strftime("%y:%m:%d") >= Date.today.strftime("%y:%m:%d") %>
                       <td>
-                        <%= order.expire_at %>
-                      </td>
-                    <% else %>
-                      <td style="color:red;">
-                        <%= order.expire_at %>
-                      </td>
-                      <% end %>
-                      <td>
-                        <%= order.member.name %>
+                        <%=  %>
                       </td>
                       <td>
                         <%= link_to "", { :controller => :orders, :action => :disable, :id => order.id }, { class: "ion ion-log-in"} %>
