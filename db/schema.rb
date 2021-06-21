@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210621131757) do
+ActiveRecord::Schema.define(version: 20210621135909) do
 
   create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.integer  "priority",                 default: 0, null: false
@@ -60,7 +60,19 @@ ActiveRecord::Schema.define(version: 20210621131757) do
     t.datetime "date"
     t.decimal  "price",      precision: 10, scale: 2
     t.string   "items"
+    t.string   "order_type"
     t.index ["member_id"], name: "index_orders_on_member_id", using: :btree
+  end
+
+  create_table "purchase_orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
+    t.string   "client"
+    t.integer  "quantity"
+    t.decimal  "price",      precision: 10, scale: 2
+    t.string   "items"
+    t.integer  "member_id"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.index ["member_id"], name: "index_purchase_orders_on_member_id", using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
@@ -88,4 +100,5 @@ ActiveRecord::Schema.define(version: 20210621131757) do
   end
 
   add_foreign_key "orders", "members"
+  add_foreign_key "purchase_orders", "members"
 end

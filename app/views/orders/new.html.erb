@@ -37,6 +37,10 @@
                 <% end %>
 
                 <div class="box-body">
+                  <div class="form-group">
+                    <label>Order Type</label>
+                    <%= f.select(:order_type, [["Purchase","purchase"], ["Sales","sales"]], {}, { :class => 'form-control' })%>
+                  </div>
                   <!-- list commodity -->
                   <div class="box-body">
                     <table class="table table-bordered table-hover" id="commodity_table">
@@ -59,7 +63,7 @@
                             <%= item.name %>
                           </td>
                           <!-- TODO: max is not applied to 2nd row and above -->
-                          <td> <%= f.number_field :client, class: 'form-control', placeholder: item.remaining_quantity, required: true, min: 0, max: item.remaining_quantity %> </td>
+                          <td> <%= f.number_field :item_list, class: 'form-control', placeholder: item.remaining_quantity, required: true, min: 0, max: item.remaining_quantity %> </td>
                           <td>
                             <%= item.get_price %>
                           </td>
@@ -81,6 +85,10 @@
                   <div class="form-group" id="supplier_name">
                     <label>Supplier Name</label>
                     <%= f.text_field :supplier, class: 'form-control', placeholder: 'Enter Supplier Name', required: true %>
+                  </div>
+                  <div class="form-group" id="client_name" style="display:none">
+                    <label>Client Name</label>
+                    <%= f.text_field :client, class: 'form-control', placeholder: 'Enter Client Name',  required: true %>
                   </div>
                 </div>
 
@@ -112,6 +120,7 @@
         $.widget.bridge('uibutton', $.ui.button);
         $('.datepicker').datepicker({format: 'yyyy/mm/dd'});
 
+        show_form_type();
         calculate_price();
       });
 
@@ -179,6 +188,26 @@
         });
        
         return JSON.stringify(item_list_json);
+      }
+
+      function show_form_type()
+      {
+        // update form based on order type changed
+        $(document).on("order_order_type").change(function(){
+          var order_type = $("#order_order_type").find(":selected").val();
+
+          // hide fields unrelated to sales
+          if(order_type == "sales")
+          {
+            $('#client_name').show()
+            $('#supplier_name').hide()
+          }
+          else 
+          {
+            $('#supplier_name').show()
+            $('#client_name').hide()
+          }
+        });
       }
 
       // Purcase_Orders

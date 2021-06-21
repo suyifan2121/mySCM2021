@@ -5,6 +5,8 @@ class Order < ApplicationRecord
   # validates :expire_at, presence: true
   validates :member_id, presence: true
 
+  attr_accessor :item_list 
+
   def self.active?
     Order.where(status: true)
   end

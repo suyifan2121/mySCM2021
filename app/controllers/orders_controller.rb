@@ -64,7 +64,7 @@ class OrdersController < ApplicationController
         end
       end
 
-      @order = Order.new(order_params.merge(member_id: member_id))
+      @order = Order.new(order_params.merge(member_id: member_id).except(:item_list))
       puts "attributes: #{@order.attributes}"
       if @order.save
         @current_user = current_user
@@ -119,6 +119,6 @@ class OrdersController < ApplicationController
     end
 
     def order_params
-      params.require(:order).permit(:quantity, :expire_at, :status, :member_id, :supplier, :items, :price, :client)
+      params.require(:order).permit(:quantity, :expire_at, :status, :member_id, :supplier, :items, :price, :client, :item_list)
     end
 end
