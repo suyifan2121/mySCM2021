@@ -36,7 +36,8 @@
                       <th>Description</th>
                       <th>Quantity</th>
                       <th>Quantity Available</th>
-                      <th>Price</th>
+                      <th>Purchase Price</th>
+                      <th>Retail Price</th>
                       <th>Edit</th>
                       <!-- remark: hide the delete button from unauthorized users -->
                       <% if can? :delete, Item %>
@@ -54,7 +55,8 @@
                       <td><%= item.description %></td>
                       <td><%= item.quantity %></td>
                       <td><%= item.remaining_quantity %></td>
-                      <td><%= item.get_price %></td>
+                      <td><%= item.get_purchase_price %></td>
+                      <td><%= item.get_retail_price %></td>
                       <td><%= link_to 'Edit', edit_item_path(item) %></td>
                       <!-- remark: hide the delete button from unauthorized users -->
                       <% if can? :delete, Item %>

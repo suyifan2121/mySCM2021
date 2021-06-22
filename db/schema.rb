@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210621135909) do
+ActiveRecord::Schema.define(version: 20210622082713) do
 
   create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.integer  "priority",                 default: 0, null: false
@@ -35,7 +35,8 @@ ActiveRecord::Schema.define(version: 20210621135909) do
     t.datetime "created_at",                                                null: false
     t.datetime "updated_at",                                                null: false
     t.integer  "remaining_quantity"
-    t.decimal  "price",                            precision: 10, scale: 2
+    t.decimal  "purchase_price",                   precision: 10, scale: 2
+    t.decimal  "retail_price",                     precision: 10, scale: 2
   end
 
   create_table "members", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|

@@ -29,8 +29,12 @@ class Order < ApplicationRecord
     @order.update(status: false)
   end
 
-  # custom function to get price to display price in MYR eg. 32.5 -> 32.50
-  def get_price
-    "RM #{sprintf "%.2f", self.price}" unless price.nil?
+  # custom function to get purchase_price to display purchase_price in MYR eg. 32.5 -> 32.50
+  def get_purchase_price
+    "RM #{sprintf "%.2f", self.purchase_price}" unless purchase_price.nil?
+  end
+
+  def get_retail_price
+    "RM #{sprintf "%.2f", self.retail_price}" unless retail_price.nil?
   end
 end
