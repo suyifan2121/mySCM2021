@@ -5,13 +5,18 @@ class Order < ApplicationRecord
   # validates :expire_at, presence: true
   validates :member_id, presence: true
 
-  attr_accessor :item_list 
+  attr_accessor :item_list, :order_date, :purchase_items, :sales_items
 
-  def self.active?
-    Order.where(status: true)
+  def self.approve?
+    @order = Order.where(id: id)
+    @order.update(status: true)
   end
 
-  def self.inactive?
+  def self.reject?
+    Order.where(status: false)
+  end
+
+  def self.pending?
     Order.where(status: false)
   end
 

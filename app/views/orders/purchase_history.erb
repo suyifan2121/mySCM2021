@@ -6,7 +6,7 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          Past Orders
+          Purchase History
         </h1>
         <ol class="breadcrumb">
           <li>
@@ -14,7 +14,7 @@
               <i class="fa fa-home"></i>
               Home Page</a>
           </li>
-          <li class="active">Past Orders</li>
+          <li class="active">Purchase History</li>
         </ol>
       </section>
 
@@ -30,24 +30,24 @@
                   <thead>
                     <tr>
                       <th>Order Id</th>
-                      <th>Category</th>
-                      <th>Item</th>
-                      <th>Quantity</th>
-                      <th>Borrowed at</th>
-                      <th>Returned at</th>
-                      <th>Member</th>
+                      <th>Supplier</th>
+                      <th>Total Price</th>
+                      <th>Order Date</th>
+                      <th>Ordered By</th>
+                      <th>Status</th>
+                      <th>View More</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% @inactive.each do |order| %>
+                    <% @pending.each do |order| %>
                     <tr>
                       <td><%= order.id %></td>
-                      <td><%= order.item.category %></td>
-                      <td><%= order.item.name %></td>
-                      <td><%= order.quantity %></td>
-                      <td><%= order.created_at.strftime("%d/%m/%Y, %H:%M") %></td>
-                      <td><%= order.updated_at.strftime("%d/%m/%Y, %H:%M") %></td>
+                      <td><%= order.supplier %></td>
+                      <td><%= order.price %></td>
+                      <td><%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %></td>
                       <td><%= order.member.name %></td>
+                      <td><%= "view more icon..." %></td>
+                      <td><%= "show status" %></td>
                     </tr>
                     <% end %>
                   </tbody>

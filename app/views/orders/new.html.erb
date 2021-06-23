@@ -41,9 +41,9 @@
                     <label>Order Type</label>
                     <%= f.select(:order_type, [["Purchase","purchase"], ["Sales","sales"]], {}, { :class => 'form-control' })%>
                   </div>
-                  <!-- list commodity -->
                   <div class="box-body">
-                    <table class="table table-bordered table-hover" id="commodity_table">
+                    <!-- list purchase commodity -->
+                    <table class="table table-bordered table-hover" id="purchase_commodity_table">
                       <thead>
                         <tr>
                           <th>id</th>
@@ -53,7 +53,8 @@
                           <th>Amount</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <!-- Purchase Order Form -->
+                      <tbody id="purchase_form">
                         <% @items.each do |item| %>
                         <tr>
                           <td>
@@ -63,9 +64,9 @@
                             <%= item.name %>
                           </td>
                           <!-- TODO: max is not applied to 2nd row and above -->
-                          <td> <%= f.number_field :item_list, class: 'form-control', placeholder: item.remaining_quantity, required: true, min: 0, max: item.remaining_quantity %> </td>
+                          <td> <%= f.number_field :item_list, class: 'form-control', placeholder: item.remaining_quantity, min: 0, max: item.remaining_quantity %> </td>
                           <td>
-                            <%= item.get_price %>
+                            <%= item.get_purchase_price %>
                           </td>
                           <td>
                             RM 0.00
@@ -74,13 +75,51 @@
                         <% end %>
                         <tr>
                           <td style="font-weight:bold" colspan="4"> Total </td>
-                          <td id="total_price" style="font-weight:bold"> RM 0.00 </td>
+                          <td id="total_purchase_price" style="font-weight:bold"> RM 0.00 </td>
+                        </tr>
+                        
+                      </tbody>                  
+                    </table>
+
+                    <!-- list sales commodity -->
+                    <table class="table table-bordered table-hover" id="sales_commodity_table" style="display:none">
+                      <thead>
+                        <tr>
+                          <th>id</th>
+                          <th>Name</th>
+                          <th>Quantity</th>
+                          <th>Sales Price</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <!-- Sales Order Form -->
+                      <tbody id="sales_form" style="display:none">
+                        <% @items.each do |item| %>
+                        <tr>
+                          <td>
+                            <%= item.id %>
+                          </td>
+                          <td>
+                            <%= item.name %>
+                          </td>
+                          <!-- TODO: max is not applied to 2nd row and above -->
+                          <td> <%= f.number_field :item_list, class: 'form-control', placeholder: item.remaining_quantity, min: 0, max: item.remaining_quantity %> </td>
+                          <td>
+                            <%= item.get_retail_price %>
+                          </td>
+                          <td>
+                            RM 0.00
+                          </td>
+                        </tr>
+                        <% end %>
+                        <tr>
+                          <td style="font-weight:bold" colspan="4"> Total </td>
+                          <td id="total_sales_price" style="font-weight:bold"> RM 0.00 </td>
                         </tr>
                         
                       </tbody>
                     </table>
                   </div>
-
 
                   <div class="form-group" id="supplier_name">
                     <label>Supplier Name</label>
@@ -89,6 +128,11 @@
                   <div class="form-group" id="client_name" style="display:none">
                     <label>Client Name</label>
                     <%= f.text_field :client, class: 'form-control', placeholder: 'Enter Client Name',  required: false %>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Order Date</label>
+                    <%= f.text_field :date, class: 'form-control datepicker', required: true %>
                   </div>
                 </div>
 
@@ -121,29 +165,51 @@
         $('.datepicker').datepicker({format: 'yyyy/mm/dd'});
 
         show_form_type();
-        calculate_price();
+        calculate_purchase_price();
+        calculate_sales_price();
       });
 
       $('#new_order').submit(function() {
         // submit processed data to controller
-        $("#order_items").val(build_item_json());
-        $("#order_price").val(parseFloat($("#total_price").html().replace(/[^0-9\.]/g, '')));
+        var order_type = $("#order_order_type").find(":selected").val();
+
+        if (order_type == "purchase")
+        {
+          $("#order_items").val(build_purchase_item_json());
+          $("#order_price").val(parseFloat($("#total_purchase_price").html().replace(/[^0-9\.]/g, '')));
+        }
+        else
+        {
+          $("#order_items").val(build_sales_item_json());
+          $("#order_price").val(parseFloat($("#total_sales_price").html().replace(/[^0-9\.]/g, '')));
+        }
       });
 
-      function calculate_price()
+      function calculate_purchase_price()
       {
         // update form based on order type changed
         $(document).on("#order_quantity").change(function(){
           // for each row, update the price (skip first and last row - title and total amount)
-          nRows = $("#commodity_table tr").length;
+          nRows = $("#purchase_commodity_table tr").length;
           total_price = 0.0;
           total_quantity = 0;
-          $("#commodity_table tr").not(":first, :last").each(function(){
+          $("#purchase_commodity_table tr").not(":first, :last").each(function(){
               var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
               var display_price = $(this).find("td:eq(3)").html();
               // format to get price value as price displayed is in RM xx.xx
-              var price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
-              var amount = parseFloat((quantity_selected * price).toFixed(2));
+              var price = 0;
+              var amount = 0;
+
+              //ensure price is not null
+              if (display_price) {
+                price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
+              }
+              if (quantity_selected) {
+                amount = parseFloat((quantity_selected * price).toFixed(2));
+              }
+              else { 
+                quantity_selected = 0;
+              }
 
               // calculate price of the commodity selected
               if (quantity_selected.length != 0) {
@@ -156,25 +222,120 @@
           });
 
           // update total price
-          $("#commodity_table tr:last").find("td:eq(1)").html("RM " + total_price.toFixed(2));
+          $("#purchase_commodity_table tr:last").find("td:eq(1)").html("RM " + total_price.toFixed(2));
 
           // update total quantity
           $("#order_quantity").val(total_quantity);
         });
       }
 
-      function build_item_json()
+      function calculate_sales_price()
+      {
+        // update form based on order type changed
+        $(document).on("#order_quantity").change(function(){
+          // for each row, update the price (skip first and last row - title and total amount)
+          nRows = $("#sales_commodity_table tr").length;
+          total_price = 0.0;
+          total_quantity = 0;
+          $("#sales_commodity_table tr").not(":first, :last").each(function(){
+              var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
+              var display_price = $(this).find("td:eq(3)").html();
+              // format to get price value as price displayed is in RM xx.xx
+              var price = 0;
+              var amount = 0;
+
+              //ensure price is not null
+              if (display_price) {
+                price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
+              }
+              if (quantity_selected) {
+                amount = parseFloat((quantity_selected * price).toFixed(2));
+              }
+              else { 
+                quantity_selected = 0;
+              }
+
+              // calculate price of the commodity selected
+              if (quantity_selected.length != 0) {
+                $(this).find("td:eq(4)").html("RM " + amount);
+
+                // sum total price and quantity
+                total_price = total_price + amount;
+                total_quantity = total_quantity + parseInt(quantity_selected);
+              }
+          });
+
+          // update total price
+          $("#sales_commodity_table tr:last").find("td:eq(1)").html("RM " + total_price.toFixed(2));
+
+          // update total quantity
+          $("#order_quantity").val(total_quantity);
+        });
+      }
+
+      function build_purchase_item_json()
       {
         var item_list_json = [];
-        nRows = $("#commodity_table tr").length;
+        nRows = $("#purchase_commodity_table tr").length;
         total_price = 0.0;
-        $("#commodity_table tr").not(":first, :last").each(function(){
+        $("#purchase_commodity_table tr").not(":first, :last").each(function(){
             var item_id = $(this).find("td:eq(0)").html().replace(/\s/g,'')
             var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
             var display_price = $(this).find("td:eq(3)").html();
+
             // format to get price value as price displayed is in RM xx.xx
-            var price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
-            var amount = parseFloat((quantity_selected * price).toFixed(2));
+            var price = 0;
+            var amount = 0;
+
+            //ensure price is not null
+            if (display_price) {
+              price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
+            }
+            if (quantity_selected) {
+              amount = parseFloat((quantity_selected * price).toFixed(2));
+            }
+            else { 
+              quantity_selected = 0;
+            }
+
+            // build json item lists
+            if (quantity_selected.length != 0) {
+              item = {};
+              item ["id"] = item_id;
+              item ["quantity"] = quantity_selected;
+              item ["amount"] = amount;
+
+              item_list_json.push(item);
+            }
+        });
+       
+        return JSON.stringify(item_list_json);
+      }
+
+      function build_sales_item_json()
+      {
+        var item_list_json = [];
+        nRows = $("#sales_commodity_table tr").length;
+        total_price = 0.0;
+        $("#sales_commodity_table tr").not(":first, :last").each(function(){
+            var item_id = $(this).find("td:eq(0)").html().replace(/\s/g,'')
+            var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
+            var display_price = $(this).find("td:eq(3)").html();
+
+            // format to get price value as price displayed is in RM xx.xx
+            var price = 0;
+            var amount = 0;
+
+            //ensure price is not null
+            if (display_price) {
+              price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
+            }
+            if (quantity_selected) {
+              amount = parseFloat((quantity_selected * price).toFixed(2));
+            }
+            else { 
+              quantity_selected = 0;
+            }
 
             // build json item lists
             if (quantity_selected.length != 0) {
@@ -204,6 +365,12 @@
 
             $('#order_client').attr('required',true);
             $('#order_supplier').removeAttr('required');
+
+            $('#sales_form').show();
+            $('#purchase_form').hide();
+
+            $('#sales_commodity_table').show();
+            $('#purchase_commodity_table').hide();
           }
           else 
           {
@@ -212,6 +379,12 @@
 
             $('#order_supplier').attr('required',true);
             $('#order_client').removeAttr('required');
+
+            $('#purchase_form').show();
+            $('#sales_form').hide();
+
+            $('#purchase_commodity_table').show();
+            $('#sales_commodity_table').hide();
           }
         });
       }

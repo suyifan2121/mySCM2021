@@ -82,37 +82,34 @@
           <div class="col-md-6">
             <div class="box">
               <div class="box-header with-border">
-                <h3 class="box-title">Orders (<%= @active.count %>)</h3>
+                <h3 class="box-title">Orders (<%= @pending_orders.count %>)</h3>
               </div>
               <!-- /.box-header -->
               <div class="box-body">
                 <table class="table table-bordered table-hover">
                   <thead>
                     <tr>
-                      <th>Description</th>
-                      <th>Qty</th>
-                      <th>Return By</th>
-                      <th>Borrowed By</th>
-                      <th>
-                        <i class="ion ion-log-in"></i>
-                      </th>
-                      <th>
-                        <i class="ion ion-loop"></i>
-                      </th>
-                      <th>
-                        <i class="ion ion-trash-b"></i>
-                      </th>
+                      <th>Supplier</th>
+                      <th>Price</th>
+                      <th>Order Date</th>
+                      <th>Ordered By</th>
+                      <th>View</th>
+                      <th>Approve</th>
+                      <th>Reject</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% @items.each do |order| %>
+                    <% @pending_orders.each do |order| %>
                     <tr>
                       <td>
-                        <%= order.name %>
+                        <%= order.supplier %>
                       </td>
-                      <td><%= order.quantity %></td>
+                      <td><%= order.price %></td>
                       <td>
-                        <%=  %>
+                        <%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %>
+                      </td>
+                      <td>
+                        <%= order.member.name %>
                       </td>
                       <td>
                         <%= link_to "", { :controller => :orders, :action => :disable, :id => order.id }, { class: "ion ion-log-in"} %>

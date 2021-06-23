@@ -5,12 +5,16 @@ class OrdersController < ApplicationController
     @orders = Order.all
     @members = Member.all
     @items = Item.all
-    @active = Order.active?
+    @pending_orders = Order.pending?
     # @expired = Order.expired?
   end
 
-  def old
-    @inactive = Order.inactive?
+  def purchase_history
+    @pending = Order.where(order_type: "purchase")
+  end
+
+  def sales_history
+    @pending = Order.where(order_type: "sales")
   end
 
   def renew
@@ -42,16 +46,40 @@ class OrdersController < ApplicationController
     end
   end
 
+  def approve
+    @current_user = current_user
+    @order = Order.find_by_id(params[:id])
+    Order.approve(params[:id])
+    redirect_to :root
+    flash[:notice] = "Orders Approved"
+
+    begin
+      OrderMailer.delay.return_order(@order, @current_user).deliver
+    rescue Exception => e
+    end
+  end
+
   def new
     @order = Order.new
-    @active = Order.active?
+    @pending_orders = Order.pending?
     @items = Item.where("remaining_quantity > ?", 0).all
   end
 
   def create
     @items = Item.where("remaining_quantity > ?", 0).all
     member_id = current_user.member.id
-    order_items = JSON.parse(params[:order][:items])
+
+    order_items = JSON.parse(params[:order][:items]) 
+
+    # if params[:order][:order_type] == "purchase"
+    #   order_items = JSON.parse(params[:order][:purchase_items]) 
+    #   order_params[:items] = params[:order][:purchase_items]
+    # elsif params[:order][:order_type] == "sales"
+    #   order_items = JSON.parse(params[:order][:sales_items])
+    #   order_params[:items] = params[:order][:sales_items]
+    # end
+
+    puts "params: #{order_params.to_hash}"
 
     ActiveRecord::Base.transaction do
       order_items.each do |item|
@@ -119,6 +147,6 @@ class OrdersController < ApplicationController
     end
 
     def order_params
-      params.require(:order).permit(:quantity, :expire_at, :status, :member_id, :supplier, :items, :purchase_price, :retail_price, :client, :item_list)
+      params.require(:order).permit(:quantity, :expire_at, :status, :member_id, :supplier, :items, :purchase_items, :sales_items, :purchase_price, :retail_price, :client, :item_list, :order_type, :date, :price)
     end
 end
