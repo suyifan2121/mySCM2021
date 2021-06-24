@@ -3,6 +3,7 @@ class MembersController < ApplicationController
 
   def index
     @members = Member.all
+    @member = Member.new
   end
 
   def new
@@ -40,11 +41,11 @@ class MembersController < ApplicationController
   end
 
   def destroy
-    if @member.orders.where(status: true).count == 0
+    unless @member == current_user.member
       @member.destroy
       redirect_to :root, notice: 'Member was successfully destroyed.'
     else
-      flash[:alert] = 'Members with active orders can not be deleted. Mark his/hers open orders as returned and try again.'
+      flash[:alert] = 'Not allowed to delete current user.'
       redirect_to root_url
     end
   end

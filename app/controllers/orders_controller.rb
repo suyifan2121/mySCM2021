@@ -17,6 +17,68 @@ class OrdersController < ApplicationController
     @pending = Order.where(order_type: "sales")
   end
 
+  def purchase_order
+    @order = Order.find(params[:id])
+    @items = JSON.parse(@order.items)
+  end
+
+  def sales_order
+    @order = Order.find(params[:id])
+    @items = JSON.parse(@order.items)
+  end
+
+  def verify
+    puts "helloooooooo"
+    @order = Order.find(params[:id])
+
+    # perform item decrement if it is a rejected order
+    # note: only rejected order will show status as false and not nil
+    puts "order status: #{@order.status}"
+    if !@order.status.nil?
+      unless @order.status
+        order_items = JSON.parse(@order.items)
+
+        ActiveRecord::Base.transaction do
+          order_items.each do |item|
+            @ordered_item = Item.find_by_id(item["id"].to_i)
+            @ordered_item.decrement!(:remaining_quantity, item["quantity"].to_i)
+          end
+        end
+      end
+    end
+
+    @order.verify
+    if @order.save
+      redirect_to :root
+      flash[:notice] = "Order Verified"
+    else
+      redirect_to :root
+      flash[:notice] = "Order Unable to Verify"
+    end
+  end
+
+  def reject
+    @order = Order.find(params[:id])
+
+    order_items = JSON.parse(@order.items)
+
+    ActiveRecord::Base.transaction do
+      order_items.each do |item|
+        @ordered_item = Item.find_by_id(item["id"].to_i)
+        @ordered_item.increment!(:remaining_quantity, item["quantity"].to_i)
+      end
+    end
+
+    @order.reject
+    if @order.save
+      redirect_to :root
+      flash[:notice] = "Order Rejected"
+    else
+      redirect_to :root
+      flash[:notice] = "Order Unable to Reject"
+    end
+  end
+
   def renew
     @current_user = current_user
     @order = Order.find_by_id(params[:id])

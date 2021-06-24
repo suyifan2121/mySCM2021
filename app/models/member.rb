@@ -6,4 +6,19 @@ class Member < ApplicationRecord
   validates :name, presence: true
   validates :email, presence: true
   validates :phone, presence: true
+
+  def get_role
+  	case self.role
+      when "superadmin"
+        return "Super Admin"
+      when "sysadmin"
+        return "System Admin"
+      when "inventoryadmin"
+        return "Inventory Admin"
+      when "purchasingagent"
+        return "Purchasing Agent"
+      when "salesagent"
+        return "Sales Agent"
+      end
+  end
 end

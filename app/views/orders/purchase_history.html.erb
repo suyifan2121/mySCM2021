@@ -6,7 +6,7 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          Sales History
+          Purchase History
         </h1>
         <ol class="breadcrumb">
           <li>
@@ -14,7 +14,7 @@
               <i class="fa fa-home"></i>
               Home Page</a>
           </li>
-          <li class="active">Sales History</li>
+          <li class="active">Purchase History</li>
         </ol>
       </section>
 
@@ -30,7 +30,7 @@
                   <thead>
                     <tr>
                       <th>Order Id</th>
-                      <th>Client</th>
+                      <th>Supplier</th>
                       <th>Total Price</th>
                       <th>Order Date</th>
                       <th>Ordered By</th>
@@ -42,12 +42,12 @@
                     <% @pending.each do |order| %>
                     <tr>
                       <td><%= order.id %></td>
-                      <td><%= order.client %></td>
+                      <td><%= order.supplier %></td>
                       <td><%= order.price %></td>
                       <td><%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %></td>
                       <td><%= order.member.name %></td>
-                      <td><%= "view more icon..." %></td>
-                      <td><%= "show status" %></td>
+                      <td><%= order.get_status %></td>
+                      <td><%= link_to 'View More', purchase_order_path(id: order.id) %></td>
                     </tr>
                     <% end %>
                   </tbody>

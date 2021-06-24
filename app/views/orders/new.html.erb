@@ -42,6 +42,9 @@
                     <%= f.select(:order_type, [["Purchase","purchase"], ["Sales","sales"]], {}, { :class => 'form-control' })%>
                   </div>
                   <div class="box-body">
+                    <div class="form-group">
+                        <label>Order Items</label>
+                    </div>
                     <!-- list purchase commodity -->
                     <table class="table table-bordered table-hover" id="purchase_commodity_table">
                       <thead>
@@ -283,6 +286,8 @@
             var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
             var display_price = $(this).find("td:eq(3)").html();
 
+            var item_name = $.trim($(this).find("td:eq(1)").html());
+
             // format to get price value as price displayed is in RM xx.xx
             var price = 0;
             var amount = 0;
@@ -302,7 +307,9 @@
             if (quantity_selected.length != 0) {
               item = {};
               item ["id"] = item_id;
+              item ["name"] = item_name;
               item ["quantity"] = quantity_selected;
+              item ["price"] = price;
               item ["amount"] = amount;
 
               item_list_json.push(item);
@@ -322,6 +329,8 @@
             var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
             var display_price = $(this).find("td:eq(3)").html();
 
+            var item_name = $.trim($(this).find("td:eq(1)").html());
+
             // format to get price value as price displayed is in RM xx.xx
             var price = 0;
             var amount = 0;
@@ -341,7 +350,9 @@
             if (quantity_selected.length != 0) {
               item = {};
               item ["id"] = item_id;
+              item ["name"] = item_name;
               item ["quantity"] = quantity_selected;
+              item ["price"] = price;
               item ["amount"] = amount;
 
               item_list_json.push(item);

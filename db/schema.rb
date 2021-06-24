@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210622082713) do
+ActiveRecord::Schema.define(version: 20210624163934) do
 
   create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.integer  "priority",                 default: 0, null: false
@@ -54,14 +54,15 @@ ActiveRecord::Schema.define(version: 20210622082713) do
     t.string   "quantity"
     t.boolean  "status"
     t.integer  "member_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "supplier"
     t.string   "client"
     t.datetime "date"
-    t.decimal  "price",      precision: 10, scale: 2
+    t.decimal  "price",       precision: 10, scale: 2
     t.string   "items"
     t.string   "order_type"
+    t.string   "verified_by"
     t.index ["member_id"], name: "index_orders_on_member_id", using: :btree
   end
 

@@ -6,7 +6,8 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          Purchase History
+          Members
+          <small>Management</small>
         </h1>
         <ol class="breadcrumb">
           <li>
@@ -14,7 +15,7 @@
               <i class="fa fa-home"></i>
               Home Page</a>
           </li>
-          <li class="active">Purchase History</li>
+          <li class="active">Manage Members</li>
         </ol>
       </section>
 
@@ -29,25 +30,31 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th>Order Id</th>
-                      <th>Supplier</th>
-                      <th>Total Price</th>
-                      <th>Order Date</th>
-                      <th>Ordered By</th>
-                      <th>Status</th>
-                      <th>View More</th>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Role</th>
+                      <th>Edit</th>
+                      <!-- remark: hide the delete button from unauthorized users -->
+                      <% if can? :delete, Member %>
+                        <th>Delete</th>
+                      <% end %>
                     </tr>
                   </thead>
                   <tbody>
-                    <% @pending.each do |order| %>
+                    <% @members.each do |member| %>
                     <tr>
-                      <td><%= order.id %></td>
-                      <td><%= order.supplier %></td>
-                      <td><%= order.price %></td>
-                      <td><%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %></td>
-                      <td><%= order.member.name %></td>
-                      <td><%= "view more icon..." %></td>
-                      <td><%= "show status" %></td>
+                      <td><%= member.id %></td>
+                      <td><%= member.name %></td>
+                      <td><%= member.email %></td>
+                      <td><%= member.phone %></td>
+                      <td><%= member.get_role %></td>
+                      <td><%= link_to 'Edit', edit_member_path(member) %></td>
+                      <!-- remark: hide the delete button from unauthorized users -->
+                      <% if can? :delete, Member %>
+                        <td><%= link_to 'Delete', member, method: :delete, data: { confirm: 'Are you sure you want to delete this member?' } %></td>
+                      <% end %>
                     </tr>
                     <% end %>
                   </tbody>
@@ -58,20 +65,16 @@
           </div>
         </div>
       </section>
+
+
     </div>
     <%= render 'layouts/footer' %>
   </div>
   <script>
     $(function () {
       $("#example1").DataTable();
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false
-      });
+      
     });
   </script>
 </body>
+
