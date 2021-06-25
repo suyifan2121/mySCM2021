@@ -43,7 +43,7 @@
                     <tr>
                       <td><%= order.id %></td>
                       <td><%= order.client %></td>
-                      <td><%= order.price %></td>
+                      <td><%= "RM #{'%.2f' % order.price}" %></td>
                       <td><%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %></td>
                       <td><%= order.member.name %></td>
                       <td><%= order.get_status %></td>

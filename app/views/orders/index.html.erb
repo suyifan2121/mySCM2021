@@ -27,8 +27,8 @@
             <!-- small box -->
             <div class="small-box bg-aqua">
               <div class="inner">
-                <h3><%=@items.sum(:quantity)%></h3>
-                <p>Items Tracked</p>
+                <h3><%=@total_purchase_order%></h3>
+                <p>Total Purchase</p>
               </div>
               <div class="icon">
                 <i class="ion ion-search"></i>
@@ -40,8 +40,8 @@
             <!-- small box -->
             <div class="small-box bg-green">
               <div class="inner">
-                <h3><%=@items.sum(:remaining_quantity)%></h3>
-                <p>Items Available</p>
+                <h3><%= @pending_purchase_orders %></h3>
+                <p>Pending Purchase Verifications</p>
               </div>
               <div class="icon">
                 <i class="ion ion-checkmark"></i>
@@ -53,8 +53,8 @@
             <!-- small box -->
             <div class="small-box bg-red">
               <div class="inner">
-                <h3><%= (@items.sum(:quantity) - @items.sum(:remaining_quantity)) %></h3>
-                <p>Items Unavailable</p>
+                <h3><%= @total_sales_order %></h3>
+                <p>Total Sales</p>
               </div>
               <div class="icon">
                 <i class="ion ion-alert"></i>
@@ -66,8 +66,8 @@
             <!-- small box -->
             <div class="small-box bg-yellow">
               <div class="inner">
-                <h3><%= "n" %></h3>
-                <p>Expired Orders</p>
+                <h3><%= @pending_sales_orders %></h3>
+                <p>Pending Sales Verifications</p>
               </div>
               <div class="icon">
                 <i class="ion ion-android-time"></i>
@@ -82,46 +82,32 @@
           <div class="col-md-6">
             <div class="box">
               <div class="box-header with-border">
-                <h3 class="box-title">Orders (<%= @pending_orders.count %>)</h3>
+                <h3 class="box-title">Upcoming Purchase Orders (<%= @upcoming_purchase.count %>)</h3>
               </div>
               <!-- /.box-header -->
               <div class="box-body">
                 <table class="table table-bordered table-hover">
                   <thead>
                     <tr>
+                      <th>Order ID</th>
                       <th>Supplier</th>
-                      <th>Price</th>
+                      <th>Total Price</th>
                       <th>Order Date</th>
                       <th>Ordered By</th>
-                      <th>View</th>
-                      <th>Verify</th>
-                      <th>Reject</th>
+                      <th>Status</th>
+                      <th>View More</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% @pending_orders.each do |order| %>
+                    <% @upcoming_purchase.each do |order| %>
                     <tr>
-                      <td>
-                        <%= order.supplier %>
-                      </td>
+                      <td><%= order.id %></td>
+                      <td><%= order.supplier %></td>
                       <td><%= order.price %></td>
-                      <td>
-                        <%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %>
-                      </td>
-                      <td>
-                        <%= order.member.name %>
-                      </td>
-                      <td>
-                        <%= link_to "", { :controller => :orders, :action => :disable, :id => order.id }, { class: "ion ion-log-in"} %>
-                      </td>
-                      <td>
-                        <%= link_to "", { :controller => :orders, :action => :renew, :id => order.id }, { class: "ion ion-loop"} %>
-                      </td>
-                      <td >
-                        <%= link_to order, method: :delete, data: { confirm: 'Are you sure? If you are trying to return an item it is recommended to use the "return" button.' } do %>
-                        <i class="ion ion-trash-b"></i>
-                        <% end %>
-                      </td>
+                      <td><%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %></td>
+                      <td><%= order.member.name %></td>
+                      <td><%= order.get_status %></td>
+                      <td><%= link_to 'View More', purchase_order_path(id: order.id) %></td>
                     </tr>
                     <% end %>
                   </tbody>
@@ -135,35 +121,31 @@
           <div class="col-md-6">
             <div class="box">
               <div class="box-header with-border">
-                <h3 class="box-title">Members (<%= @members.count %>)</h3>
+                <h3 class="box-title">Upcoming Sales Orders (<%= @upcoming_sales.count %>)</h3>
               </div>
               <!-- /.box-header -->
               <div class="box-body">
                 <table class="table table-bordered table-hover">
                   <tr>
-                    <th>Name</th>
-                    <th>E-mail</th>
-                    <th>Phone</th>
-                    <th>
-                      <i class="ion ion-edit"></i>
-                    </th>
-                    <th>
-                      <i class="ion ion-trash-b"></i>
-                    </th>
+                    <th>Order ID</th>
+                      <th>Supplier</th>
+                      <th>Total Price</th>
+                      <th>Order Date</th>
+                      <th>Ordered By</th>
+                      <th>Status</th>
+                      <th>View More</th>
                   </tr>
-                  <% @members.each do |member| %>
-                  <tr>
-                    <td><%= member.name %></td>
-                    <td><%= member.email %></td>
-                    <td><%= member.phone %></td>
-                    <td><%= link_to "", edit_member_path(member), { class: "ion ion-edit"} %></td>
-                    <td>
-                      <%= link_to member, method: :delete, data: { confirm: 'Are you sure?' } do %>
-                      <i class="ion ion-trash-b"></i>
-                      <% end %>
-                    </td>
-                  </tr>
-                  <% end %>
+                  <% @upcoming_sales.each do |order| %>
+                    <tr>
+                      <td><%= order.id %></td>
+                      <td><%= order.client %></td>
+                      <td><%= order.price %></td>
+                      <td><%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %></td>
+                      <td><%= order.member.name %></td>
+                      <td><%= order.get_status %></td>
+                      <td><%= link_to 'View More', sales_order_path(id: order.id) %></td>
+                    </tr>
+                    <% end %>
                 </table>
               </div>
             </div>

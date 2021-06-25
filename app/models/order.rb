@@ -28,6 +28,10 @@ class Order < ApplicationRecord
     self.status = false
   end
 
+  def upcoming?
+    Date.today < self.order.date
+  end
+
   # def self.expired?
   #   Order.where("expire_at < ?", Date.today).where(status: true)
   # end

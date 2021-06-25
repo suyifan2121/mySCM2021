@@ -3,9 +3,14 @@ class OrdersController < ApplicationController
 
   def index
     @orders = Order.all
-    @members = Member.all
-    @items = Item.all
-    @pending_orders = Order.pending?
+    @pending_purchase_orders = Order.where(order_type: "purchase").where(status: false).count
+    @pending_sales_orders = Order.where(order_type: "sales").where(status: false).count
+
+    # display price as 2 decimal places and append zeroes on the decimal
+    @total_purchase_order = '%.2f' % Order.where(order_type: "purchase").sum(:price)
+    @total_sales_order = '%.2f' % Order.where(order_type: "sales").sum(:price)
+    @upcoming_purchase = Order.where(order_type: "purchase").where("date > ?", Date.today)
+    @upcoming_sales = Order.where(order_type: "sales").where("date > ?", Date.today)
     # @expired = Order.expired?
   end
 

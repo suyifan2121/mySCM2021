@@ -69,16 +69,16 @@
                           <!-- TODO: max is not applied to 2nd row and above -->
                           <td> <%= item["quantity"] %> </td>
                           <td>
-                            <%= "RM #{item["price"]}" %>
+                            <%= "RM #{'%.2f' % item["price"]}" %>
                           </td>
                           <td>
-                            <%= "RM #{item["amount"]}" %>
+                            <%= "RM #{'%.2f' % item["amount"]}" %>
                           </td>
                         </tr>
                         <% end %>
                         <tr>
                           <td style="font-weight:bold" colspan="4"> Total </td>
-                          <td id="total_purchase_price" style="font-weight:bold"> <%= "RM #{@order.price}" %> </td>
+                          <td id="total_purchase_price" style="font-weight:bold"> <%= "RM #{'%.2f' % @order.price}" %> </td>
                         </tr>
                         
                       </tbody>                  
