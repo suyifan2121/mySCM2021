@@ -1,0 +1,79 @@
+<body class="hold-transition skin-blue sidebar-mini">
+<%= render 'layouts/header' %>
+<div class="content-wrapper">
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Add Supplier
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-home"></i> Home Page</a></li>
+      <li class="active">Add Supplier</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <!-- left column -->
+      <div class="col-md-6">
+        <!-- general form elements -->
+        <div class="box box-header">
+          <div class="box-header with-border">
+            <h3 class="box-title">Basic Information</h3>
+          </div>
+          <!-- /.box-header -->
+          <!-- form start -->
+          <%= form_for(@supplier) do |f| %>
+            <% if @supplier.errors.any? %>
+              <div id="error_explanation">
+                <h2><%= pluralize(@supplier.errors.count, "error") %> prohibited this member from being saved:</h2>
+
+                <ul>
+                <% @supplier.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="box-body">
+             <div class="form-group">
+                <label>Supplier Name</label>
+                <%= f.text_field :name, autocomplete: "off", placeholder: "Enter Supplier Name", class: "form-control", required: true %>
+              </div>
+             <div class="form-group">
+                <label>Contact Person</label>
+                <%= f.text_field :contact_person, autocomplete: "off", placeholder: "Enter Contact Person", class: "form-control", required: true %>
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <%= f.text_field :phone, autocomplete: "off", placeholder: "Enter Phone Number", class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <%= f.text_field :email, autocomplete: "off", placeholder: "Enter Email Address", class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <label>Supplier Address</label>
+                <%= f.text_field :address, autocomplete: "off", placeholder: "Enter Supplier Address", class: "form-control" %>
+              </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+              <%= f.submit "Submit", class: "btn btn-primary"%>
+            </div>
+            <% end %>
+        </div>
+        <!-- /.box -->
+      </div>
+      <!--/.col (right) -->
+    </div>
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->
+
+</div>
+<%= render 'layouts/footer' %>
+</body>

@@ -82,12 +82,35 @@
           </a>
         <% end %>
       </li>
+
+      <li>-</li>
       <li>
-        <a href="<%= new_member_path %>">
+        <a href="<%= suppliers_path %>">
           <i class="fa fa-user-plus"></i>
-          <span>Add Supplier</span>
+          <span>List Suppliers</span>
         </a>
       </li>
+      <li>
+        <a href="<%= new_supplier_path %>">
+          <i class="fa fa-user-plus"></i>
+          <span>Create Supplier</span>
+        </a>
+      </li>
+
+            <li>-</li>
+      <li>
+        <a href="<%= clients_path %>">
+          <i class="fa fa-user-plus"></i>
+          <span>List Clients</span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= new_client_path %>">
+          <i class="fa fa-user-plus"></i>
+          <span>Create Client</span>
+        </a>
+      </li>
+
       <li>-</li>
       <li>
         <a href="<%= members_path %>">
@@ -98,7 +121,7 @@
       <li>
         <a href="<%= new_member_path %>">
           <i class="fa fa-user-plus"></i>
-          <span>Create Members</span>
+          <span>Create Member</span>
         </a>
       </li>
     </ul>

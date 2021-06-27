@@ -23,17 +23,18 @@ class OrdersController < ApplicationController
   end
 
   def purchase_order
+    @suppliers = Supplier.all
     @order = Order.find(params[:id])
     @items = JSON.parse(@order.items)
   end
 
   def sales_order
+    @clients = Client.all
     @order = Order.find(params[:id])
     @items = JSON.parse(@order.items)
   end
 
   def verify
-    puts "helloooooooo"
     @order = Order.find(params[:id])
 
     # perform item decrement if it is a rejected order
@@ -130,6 +131,8 @@ class OrdersController < ApplicationController
     @order = Order.new
     @pending_orders = Order.pending?
     @items = Item.where("remaining_quantity > ?", 0).all
+    @suppliers = Supplier.all
+    @clients = Client.all
   end
 
   def create
@@ -138,15 +141,7 @@ class OrdersController < ApplicationController
 
     order_items = JSON.parse(params[:order][:items]) 
 
-    # if params[:order][:order_type] == "purchase"
-    #   order_items = JSON.parse(params[:order][:purchase_items]) 
-    #   order_params[:items] = params[:order][:purchase_items]
-    # elsif params[:order][:order_type] == "sales"
-    #   order_items = JSON.parse(params[:order][:sales_items])
-    #   order_params[:items] = params[:order][:sales_items]
-    # end
-
-    puts "params: #{order_params.to_hash}"
+    puts "Params: #{order_params.to_hash}"
 
     ActiveRecord::Base.transaction do
       order_items.each do |item|
@@ -159,7 +154,8 @@ class OrdersController < ApplicationController
         end
       end
 
-      @order = Order.new(order_params.merge(member_id: member_id).except(:item_list))
+      @order = Order.new(order_params.merge(member_id: member_id).except(:item_list).except(:client)) if params[:order][:order_type] == "purchase"
+      @order = Order.new(order_params.merge(member_id: member_id).except(:item_list).except(:supplier)) if params[:order][:order_type] == "sales"
       puts "attributes: #{@order.attributes}"
       if @order.save
         @current_user = current_user

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resources :members
   resources :users
   resources :items
+  resources :suppliers
+  resources :clients
 
   root 'orders#index'
   get 'renew/:id' => 'orders#renew'
