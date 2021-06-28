@@ -1,0 +1,158 @@
+<body class="hold-transition skin-blue sidebar-mini">
+  <div class="wrapper">
+    <%= render 'layouts/header' %>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <h1>Return Purchase Order</h1>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-home"></i>Home Page</a></li>
+          <li class="active">Return Purchase Order</li>
+        </ol>
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="box box-header">
+              <div class="box-header with-border">
+                <h3 class="box-title">Purchase Order Details</h3>
+              </div>
+              <!-- /.box-header -->
+              <!-- form start -->
+              <%= form_for @order do |f| %>
+                <% if @order.errors.any? %>
+                  <div id="error_explanation">
+                    <h2><%= pluralize(@order.errors.count, 'error') %> prohibited this item from being saved:</h2>
+                    <ul>
+                      <% @order.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <div class="box-body">
+                  <div class="form-group" id="supplier_name">
+                    <label>Supplier Name</label>
+                    <%= f.text_field :supplier, class: 'form-control', :readonly => true %>
+                  </div>
+                  <div class="box-body">
+                    <!-- list purchase commodity -->
+                    <div class="form-group">
+	                    <label>Order Items</label>
+	                </div>
+                    <table class="table table-bordered table-hover" id="purchase_commodity_table">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Quantity</th>
+                          <th>Price</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <!-- Purchase Order Form -->
+                      <tbody id="purchase_form">
+                        <% @items.each do |item| %>
+                        <tr>
+                          <td>
+                            <%= item["id"] %>
+                          </td>
+                          <td>
+                            <%= item["name"] %>
+                          </td>
+                          <!-- TODO: max is not applied to 2nd row and above -->
+                          <td> <%= item["quantity"] %> </td>
+                          <td>
+                            <%= "RM #{'%.2f' % item["price"]}" %>
+                          </td>
+                          <td>
+                            <%= "RM #{'%.2f' % item["amount"]}" %>
+                          </td>
+                        </tr>
+                        <% end %>
+                        <tr>
+                          <td style="font-weight:bold" colspan="4"> Total </td>
+                          <td id="total_purchase_price" style="font-weight:bold"> <%= "RM #{'%.2f' % @order.price}" %> </td>
+                        </tr>
+                        
+                      </tbody>                  
+                    </table>
+                  </div>                  
+
+                  <div class="form-group">
+                    <label>Order Date</label>
+                    <%= f.text_field :date, class: 'form-control', :value => (@order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y")), :readonly => true %>
+                  </div>
+                </div>
+
+                <!-- pass processed params to controller -->
+                <%= f.hidden_field :quantity %>
+                <%= f.hidden_field :items %>
+                <%= f.hidden_field :price %>
+
+                <!-- /.box-body -->
+                <div class="box-footer">
+                  <%= f.submit "Confirm Return", class: "btn btn-primary btn-block btn-flat" %>
+                </div>
+              <% end %>
+            </div>
+            <!-- /.box -->
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <%= render 'layouts/footer' %>
+    <!-- ./wrapper -->
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+      $(document).ready(function () {
+      });
+
+      // Purcase_Orders
+      // {
+      //   "supplier" : "supplier name",
+      //   "item_list" : [
+      //   {
+      //     "name" : "pencil",
+      //     "category" : "book",
+      //     "quantity" : "30",
+      //     "price" : "2.10",
+      //   }],
+      //   "date" : "<date>"
+      // }
+
+      // Sales_Orders
+      // {
+      //   "client" : "supplier name",
+      //   "item_list" : [
+      //     {
+      //       "id" : "pencil",
+      //       "name" : "Pencil",
+      //       "category" : "book",
+      //       "quantity" : "30",
+      //       "price" : "2.10"
+      //     },
+      //     {
+      //       "id" : "a4-paper",
+      //       "name" : "A4 Paper",
+      //       "category" : "book",
+      //       "quantity" : "50",
+      //       "price" : "0.70"
+      //     }
+      //   ],
+      //   "date" : "<date>"
+      // }  
+      
+    </script>
+  </div>
+</body>

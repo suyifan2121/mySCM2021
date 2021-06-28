@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210626124049) do
+ActiveRecord::Schema.define(version: 20210628172744) do
 
   create_table "clients", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "name"
@@ -64,15 +64,19 @@ ActiveRecord::Schema.define(version: 20210626124049) do
     t.string   "quantity"
     t.boolean  "status"
     t.integer  "member_id"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.string   "supplier"
     t.string   "client"
     t.datetime "date"
-    t.decimal  "price",       precision: 10, scale: 2
-    t.string   "items"
+    t.decimal  "price",                      precision: 10, scale: 2
+    t.text     "items",        limit: 65535
     t.string   "order_type"
     t.string   "verified_by"
+    t.string   "return_items"
+    t.boolean  "return"
+    t.string   "return_date"
+    t.decimal  "return_price",               precision: 10, scale: 2
     t.index ["member_id"], name: "index_orders_on_member_id", using: :btree
   end
 

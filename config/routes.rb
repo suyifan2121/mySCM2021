@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   get 'purchase_order' => 'orders#purchase_order'
   get 'sales_order' => 'orders#sales_order'
 
+  get 'return_purchase' => 'orders#return_purchase'
+  get 'return_sales' => 'orders#return_sales'
+  get 'create_return' => 'orders#create_return'
+
   get 'order_verify' => 'orders#verify'
   get 'order_reject' => 'orders#reject'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

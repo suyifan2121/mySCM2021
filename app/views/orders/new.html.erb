@@ -58,7 +58,7 @@
                       </thead>
                       <!-- Purchase Order Form -->
                       <tbody id="purchase_form">
-                        <% @items.each do |item| %>
+                        <% @purchase_items.each do |item| %>
                         <tr>
                           <td>
                             <%= item.id %>
@@ -67,7 +67,7 @@
                             <%= item.name %>
                           </td>
                           <!-- TODO: max is not applied to 2nd row and above -->
-                          <td> <%= f.number_field :item_list, class: 'form-control', placeholder: item.remaining_quantity, min: 0, max: item.remaining_quantity %> </td>
+                          <td> <%= f.number_field :item_list, class: 'form-control', placeholder: item.remaining_quantity, min: 0, max: 9999 %> </td>
                           <td>
                             <%= item.get_purchase_price %>
                           </td>
@@ -97,7 +97,7 @@
                       </thead>
                       <!-- Sales Order Form -->
                       <tbody id="sales_form" style="display:none">
-                        <% @items.each do |item| %>
+                        <% @sales_items.each do |item| %>
                         <tr>
                           <td>
                             <%= item.id %>
@@ -135,7 +135,7 @@
 
                   <div class="form-group">
                     <label>Order Date</label>
-                    <%= f.text_field :date, class: 'form-control datepicker', required: true %>
+                    <%= f.text_field :date, value:Date.today().strftime("%Y/%m/%d"), class: 'form-control datepicker', required: true %>
                   </div>
                 </div>
 

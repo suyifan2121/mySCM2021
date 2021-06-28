@@ -35,6 +35,7 @@
                       <th>Order Date</th>
                       <th>Ordered By</th>
                       <th>Status</th>
+                      <th>Return</th>
                       <th>View More</th>
                     </tr>
                   </thead>
@@ -47,6 +48,13 @@
                       <td><%= order.date.in_time_zone("Kuala Lumpur").strftime("%d %b %Y") %></td>
                       <td><%= order.member.name %></td>
                       <td><%= order.get_status %></td>
+                      <td>
+                        <% if order.return? %>
+                          <%= "Order Returned" %>
+                        <% else %>
+                          <%= link_to 'Create Return', return_sales_path(id: order.id) %>
+                        <% end %>
+                      </td>
                       <td><%= link_to 'View More', sales_order_path(id: order.id) %></td>
                     </tr>
                     <% end %>

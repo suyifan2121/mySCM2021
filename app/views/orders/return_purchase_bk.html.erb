@@ -1,0 +1,277 @@
+<body class="hold-transition skin-blue sidebar-mini">
+  <div class="wrapper">
+    <%= render 'layouts/header' %>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <h1>Return Order</h1>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-home"></i>Home Page</a></li>
+          <li class="active">Return Order</li>
+        </ol>
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="box box-header">
+              <div class="box-header with-border">
+                <h3 class="box-title">Return Order Details</h3>
+              </div>
+              <!-- /.box-header -->
+              <!-- form start -->
+              <%= form_for @order do |f| %>
+                <% if @order.errors.any? %>
+                  <div id="error_explanation">
+                    <h2><%= pluralize(@order.errors.count, 'error') %> prohibited this item from being saved:</h2>
+                    <ul>
+                      <% @order.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <div class="box-body">
+                  <div class="form-group" id="supplier_name">
+                    <label>Supplier Name</label>
+                    <%= f.text_field :supplier, class: 'form-control', :readonly => true %>
+                  </div>
+                  <div class="box-body">
+                    <!-- list purchase commodity -->
+                    <div class="form-group">
+	                    <label>Order Items</label>
+	                </div>
+                    <table class="table table-bordered table-hover" id="return_commodity_table">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Quantity</th>
+                          <th>Price</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <!-- Purchase Order Form -->
+                      <tbody id="purchase_form">
+                        <% @items.each do |item| %>
+                        <tr>
+                          <td>
+                            <%= item["id"] %>
+                          </td>
+                          <td>
+                            <%= item["name"] %>
+                          </td>
+                          <!-- TODO: max is not applied to 2nd row and above -->
+                          <td> <%= f.number_field :item_list, class: 'form-control', placeholder: item["quantity"], min: 0, max: item["quantity"] %> </td>
+                          <td>
+                            <%= "RM #{'%.2f' % item["price"]}" %>
+                          </td>
+                          <td>
+                            <%= "RM #{'%.2f' % item["amount"]}" %>
+                          </td>
+                        </tr>
+                        <% end %>
+                        <tr>
+                          <td style="font-weight:bold" colspan="4"> Total </td>
+                          <td id="total_purchase_price" style="font-weight:bold"> <%= "RM #{'%.2f' % @order.price}" %> </td>
+                        </tr>
+                        
+                      </tbody>                  
+                    </table>
+                  </div>                  
+
+                  <div class="form-group">
+                    <label>Return Date</label>
+                    <%= f.text_field :return_date, class: 'form-control datepicker', :value => (@order.date.in_time_zone("Kuala Lumpur").strftime("%Y/%m/%d")) %>
+                  </div>
+                </div>
+
+                <!-- pass processed params to controller -->
+                <%= f.hidden_field :quantity %>
+                <%= f.hidden_field :return_items %>
+                <%= f.hidden_field :return_price %>
+
+                <!-- /.box-body -->
+                <div class="box-footer">
+                  <%= link_to "Submit Return", create_return_path(:return_order => {:return_items => 
+                    @order, :return_price => 'return_price', :return_quantity => 'return_quantity', :return_date => 'return_date'}), { :id => 'submit_btn', class: "btn btn-primary"} %>
+                </div>
+              <% end %>
+            </div>
+            <!-- /.box -->
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <%= render 'layouts/footer' %>
+    <!-- ./wrapper -->
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+      $(document).ready(function () {
+        $.widget.bridge('uibutton', $.ui.button);
+        $('.datepicker').datepicker({format: 'yyyy/mm/dd'});
+        calculate_purchase_price();
+      });
+
+      function onclick_function()
+      {
+        // submit processed data to controller
+        // var order_type = $("#order_order_type").find(":selected").val();
+
+        // $("#order_return_items").val(build_return_item_json());
+        // $("#order_return_price").val(parseFloat($("#total_purchase_price").html().replace(/[^0-9\.]/g, '')));
+
+        // // replace value to submit to controller
+        // var return_items = $('#order_return_items').val();
+        // alert(return_items);
+        alert($('#submit_btn').attr('href'));
+      }
+
+      function calculate_purchase_price()
+      {
+        // update form based on order type changed
+        $(document).on(".edit_order").change(function(){
+          // for each row, update the price (skip first and last row - title and total amount)
+          nRows = $("#return_commodity_table tr").length;
+          total_price = 0.0;
+          total_quantity = 0;
+          $("#return_commodity_table tr").not(":first, :last").each(function(){
+              var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
+              var display_price = $(this).find("td:eq(3)").html();
+              // format to get price value as price displayed is in RM xx.xx
+              var price = 0;
+              var amount = 0;
+
+              //ensure price is not null
+              if (display_price) {
+                price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
+              }
+              if (quantity_selected) {
+                amount = parseFloat((quantity_selected * price).toFixed(2));
+              }
+              else { 
+                quantity_selected = 0;
+              }
+
+              // calculate price of the commodity selected
+              if (quantity_selected.length != 0) {
+                $(this).find("td:eq(4)").html("RM " + amount);
+
+                // sum total price and quantity
+                total_price = total_price + amount;
+                total_quantity = total_quantity + parseInt(quantity_selected);
+              }
+          });
+
+          // update total price
+          $("#return_commodity_table tr:last").find("td:eq(1)").html("RM " + total_price.toFixed(2));
+
+          // update total quantity
+          $("#order_quantity").val(total_quantity);
+
+          // newly added
+          // submit processed data to controller
+          var order_type = $("#order_order_type").find(":selected").val();
+
+          $("#order_return_items").val(build_return_item_json());
+          $("#order_return_price").val(parseFloat($("#total_purchase_price").html().replace(/[^0-9\.]/g, '')));
+
+          // replace value to submit to controller
+          var return_items = $('#order_return_items').val();
+
+          // build return order params
+          $('#order_return_items').val("hellooo");
+          });
+      }
+
+      function build_return_item_json()
+      {
+        var item_list_json = [];
+        nRows = $("#return_commodity_table tr").length;
+        total_price = 0.0;
+        $("#return_commodity_table tr").not(":first, :last").each(function(){
+            var item_id = $(this).find("td:eq(0)").html().replace(/\s/g,'')
+            var quantity_selected = $(this).find("td:eq(2) input[type='number']").val();
+            var display_price = $(this).find("td:eq(3)").html();
+
+            var item_name = $.trim($(this).find("td:eq(1)").html());
+
+            // format to get price value as price displayed is in RM xx.xx
+            var price = 0;
+            var amount = 0;
+
+            //ensure price is not null
+            if (display_price) {
+              price = parseFloat(display_price.replace(/[^0-9\.]/g, ''));
+            }
+            if (quantity_selected) {
+              amount = parseFloat((quantity_selected * price).toFixed(2));
+            }
+            else { 
+              quantity_selected = 0;
+            }
+
+            // build json item lists
+            if (quantity_selected.length != 0) {
+              item = {};
+              item ["id"] = item_id;
+              item ["name"] = item_name;
+              item ["quantity"] = quantity_selected;
+              item ["price"] = price;
+              item ["amount"] = amount;
+
+              item_list_json.push(item);
+            }
+        });
+       
+        return JSON.stringify(item_list_json);
+      }
+
+
+      // Purcase_Orders
+      // {
+      //   "supplier" : "supplier name",
+      //   "item_list" : [
+      //   {
+      //     "name" : "pencil",
+      //     "category" : "book",
+      //     "quantity" : "30",
+      //     "price" : "2.10",
+      //   }],
+      //   "date" : "<date>"
+      // }
+
+      // Sales_Orders
+      // {
+      //   "client" : "supplier name",
+      //   "item_list" : [
+      //     {
+      //       "id" : "pencil",
+      //       "name" : "Pencil",
+      //       "category" : "book",
+      //       "quantity" : "30",
+      //       "price" : "2.10"
+      //     },
+      //     {
+      //       "id" : "a4-paper",
+      //       "name" : "A4 Paper",
+      //       "category" : "book",
+      //       "quantity" : "50",
+      //       "price" : "0.70"
+      //     }
+      //   ],
+      //   "date" : "<date>"
+      // }  
+      
+    </script>
+  </div>
+</body>

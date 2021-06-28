@@ -44,34 +44,15 @@
       <li>
         <a href="<%= root_url %>">
           <i class="fa fa-home"></i>
-          <span>Home Page</span>
+          <span>Dashboard</span>
         </a>
       </li>
+      <li><a>Commodity Management</a></li>
       <li>
         <a href="<%= items_path %>">
-          <i class="fa fa-search"></i>
-          <span>Check Inventory</span>
+          <i class="fa fa-list-ul"></i>
+          <span>List Commodities</span>
         </a>
-      </li>
-      <li>
-        <a href="<%= purchase_history_path %>">
-          <i class="fa fa-history"></i>
-          <span>Purchase History</span>
-        </a>
-      </li><li>
-        <a href="<%= sales_history_path %>">
-          <i class="fa fa-history"></i>
-          <span>Sales History</span>
-        </a>
-      </li>
-      <li>
-        <!-- remark: only user with item create permission can have access to this menu -->
-        <% if can? :create, Order %>
-          <a href=" <%= new_order_path %>">
-            <i class="fa fa-plus"></i>
-            <span>Create Order</span>
-          </a>
-        <% end %>
       </li>
       <li>
         <!-- remark: only user with item create permission can have access to this menu -->
@@ -83,38 +64,60 @@
         <% end %>
       </li>
 
-      <li>-</li>
+      <li><a>Orders Management</a></li>
+      <li>
+        <a href="<%= purchase_history_path %>">
+          <i class="fa fa-list-ul"></i>
+          <span>Purchase Orders</span>
+        </a>
+      </li><li>
+        <a href="<%= sales_history_path %>">
+          <i class="fa fa-list-ul"></i>
+          <span>Sales Orders</span>
+        </a>
+      </li>
+      <li>
+        <!-- remark: only user with item create permission can have access to this menu -->
+        <% if can? :create, Order %>
+          <a href=" <%= new_order_path %>">
+            <i class="fa fa-plus"></i>
+            <span>Create Order</span>
+          </a>
+        <% end %>
+      </li>
+
+      <li><a>Suppliers Management</a></li>
       <li>
         <a href="<%= suppliers_path %>">
-          <i class="fa fa-user-plus"></i>
+          <i class="fa fa-list-ul"></i>
           <span>List Suppliers</span>
         </a>
       </li>
       <li>
         <a href="<%= new_supplier_path %>">
-          <i class="fa fa-user-plus"></i>
+          <i class="fa fa-plus"></i>
           <span>Create Supplier</span>
         </a>
       </li>
 
-            <li>-</li>
+      <li><a>Clients Management</a></li>
       <li>
         <a href="<%= clients_path %>">
-          <i class="fa fa-user-plus"></i>
+          <i class="fa fa-list-ul"></i>
           <span>List Clients</span>
         </a>
       </li>
       <li>
         <a href="<%= new_client_path %>">
-          <i class="fa fa-user-plus"></i>
+          <i class="fa fa-plus"></i>
           <span>Create Client</span>
         </a>
       </li>
 
-      <li>-</li>
+      <li><a>Members Management</a></li>
       <li>
         <a href="<%= members_path %>">
-          <i class="fa fa-user-plus"></i>
+          <i class="fa fa-users"></i>
           <span>List Members</span>
         </a>
       </li>

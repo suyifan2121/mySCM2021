@@ -32,6 +32,10 @@ class Order < ApplicationRecord
     Date.today < self.order.date
   end
 
+  def return?
+    self.return
+  end
+
   # def self.expired?
   #   Order.where("expire_at < ?", Date.today).where(status: true)
   # end
