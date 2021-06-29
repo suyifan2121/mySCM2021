@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- sidebar menu: : style can be found in sidebar.less -->
-    <ul class="sidebar-menu">
+    <ul class="sidebar-menu" style="overflow-y: auto">
       <li class="header">MAIN NAVIGATION</li>
       <li>
         <a href="<%= root_url %>">
@@ -47,7 +47,6 @@
           <span>Dashboard</span>
         </a>
       </li>
-      <li><a>Commodity Management</a></li>
       <li>
         <a href="<%= items_path %>">
           <i class="fa fa-list-ul"></i>
@@ -64,15 +63,14 @@
         <% end %>
       </li>
 
-      <li><a>Orders Management</a></li>
       <li>
         <a href="<%= purchase_history_path %>">
-          <i class="fa fa-list-ul"></i>
+          <i class="fa fa-shopping-cart"></i>
           <span>Purchase Orders</span>
         </a>
       </li><li>
         <a href="<%= sales_history_path %>">
-          <i class="fa fa-list-ul"></i>
+          <i class="fa fa-money"></i>
           <span>Sales Orders</span>
         </a>
       </li>
@@ -86,10 +84,9 @@
         <% end %>
       </li>
 
-      <li><a>Suppliers Management</a></li>
       <li>
         <a href="<%= suppliers_path %>">
-          <i class="fa fa-list-ul"></i>
+          <i class="fa fa-user"></i>
           <span>List Suppliers</span>
         </a>
       </li>
@@ -100,10 +97,9 @@
         </a>
       </li>
 
-      <li><a>Clients Management</a></li>
       <li>
         <a href="<%= clients_path %>">
-          <i class="fa fa-list-ul"></i>
+          <i class="fa fa-user"></i>
           <span>List Clients</span>
         </a>
       </li>
@@ -114,7 +110,6 @@
         </a>
       </li>
 
-      <li><a>Members Management</a></li>
       <li>
         <a href="<%= members_path %>">
           <i class="fa fa-users"></i>
@@ -125,6 +120,13 @@
         <a href="<%= new_member_path %>">
           <i class="fa fa-user-plus"></i>
           <span>Create Member</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="<%= members_path %>">
+          <i class="fa fa-bar-chart"></i>
+          <span>View Report</span>
         </a>
       </li>
     </ul>
