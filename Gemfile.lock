@@ -48,6 +48,7 @@ GEM
     builder (3.2.3)
     byebug (9.0.6)
     cancancan (3.2.2)
+    chartkick (4.0.4)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.2.x)
@@ -76,6 +77,8 @@ GEM
       thor (~> 0.14)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    groupdate (5.2.2)
+      activesupport (>= 5)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     jbuilder (2.6.3)
@@ -189,11 +192,13 @@ DEPENDENCIES
   bootstrap-sass (~> 3.3.6)
   byebug
   cancancan
+  chartkick
   coffee-rails (~> 4.2)
   delayed_job
   delayed_job_active_record
   devise (= 4.4.0)
   figaro
+  groupdate
   jbuilder (~> 2.5)
   jquery-rails
   listen (~> 3.0.5)

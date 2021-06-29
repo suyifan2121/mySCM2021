@@ -21,5 +21,6 @@ Rails.application.routes.draw do
 
   get 'order_verify' => 'orders#verify'
   get 'order_reject' => 'orders#reject'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  
+  get 'view_report' => 'orders#view_report'
 end

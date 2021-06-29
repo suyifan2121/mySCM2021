@@ -13,6 +13,8 @@ gem 'puma', '~> 3.0'
 gem 'jbuilder', '~> 2.5'
 gem 'devise', '4.4.0'
 gem 'mysql2', '~> 0.4.10'
+gem "chartkick"
+gem 'groupdate'
 
 group :development, :test do
   gem 'byebug', platform: :mri

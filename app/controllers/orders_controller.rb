@@ -96,29 +96,25 @@ class OrdersController < ApplicationController
     @items = JSON.parse(@order.items)
   end
 
-  # def create_return
-  #   puts "Params: #{params.to_hash}"
-  #   return_order_items = JSON.parse(params[:order][:return_items]) 
+  def view_report
+    @orders = Order.all
+    # display price as 2 decimal places and append zeroes on the decimal
+    @total_purchase_order = '%.2f' % Order.where(order_type: "purchase").sum(:price)
+    @total_sales_order = '%.2f' % Order.where(order_type: "sales").sum(:price)
+    @upcoming_purchase = Order.where(order_type: "purchase").where("date > ?", Date.today).where(status: false)
+    @upcoming_sales = Order.where(order_type: "sales").where("date > ?", Date.today).where(status: false)
+    
+    @pending_purchase_orders = @upcoming_purchase.count
+    @pending_sales_orders = @upcoming_sales.count
 
-  #   puts "Params: #{return_order_items.to_hash}"
+    # display total amount everyday for current month
+    @monthly_purchase = Order.where(order_type: "purchase").where(status: true).group_by_day_of_month(:created_at, format: "%d", range: Time.now.beginning_of_month ..Time.now.end_of_month).sum(:price)
+    @monthly_sales = Order.where(order_type: "sales").where(status: true).group_by_day_of_month(:created_at, format: "%d", range: Time.now.beginning_of_month ..Time.now.end_of_month).sum(:price)
 
-  #   @order = Order.new(return_order_items)
-
-
-  #   ActiveRecord::Base.transaction do
-  #     return_order_items.each do |item|
-  #       @ordered_item = Item.find_by_id(item["id"].to_i)
-  #       @ordered_item.increment!(:remaining_quantity, item["quantity"].to_i)
-  #     end
-  #   end
-
-  #   if @order.merge(return: true).create
-  #     @current_user = current_user
-  #     redirect_to :root, notice: 'Return Order was successfully created.'
-  #   else
-  #     render :new
-  #   end
-  # end
+    # display total amount everyday for current year
+    @yearly_purchase = Order.where(order_type: "purchase").where(status: true).group_by_month_of_year(:created_at, format: "%B", range: Time.now.beginning_of_year ..Time.now.end_of_year).sum(:price)
+    @yearly_sales = Order.where(order_type: "sales").where(status: true).group_by_month_of_year(:created_at, format: "%B", range: Time.now.beginning_of_year ..Time.now.end_of_year).sum(:price)
+  end
 
   # update is used to mark an order as a return order
   def update
