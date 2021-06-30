@@ -158,7 +158,6 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @items = Item.where("remaining_quantity > ?", 0).all
     member_id = current_user.member.id
 
     order_items = JSON.parse(params[:order][:items]) 

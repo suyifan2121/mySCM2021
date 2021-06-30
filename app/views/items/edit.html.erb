@@ -52,16 +52,12 @@
                   <%= f.text_area :description, class: "form-control", rows: "3", laceholder: "Enter Description"%>
                 </div>
                 <div class="form-group">
-                  <label>Quantity</label>
-                  <%= f.number_field :quantity, class: "form-control", placeholder: "Enter Quantity", required: true  %>
-                </div>
-                <div class="form-group">
                   <label>Remaining Quantity</label>
                   <%= f.number_field :remaining_quantity, class: "form-control", placeholder: "Enter Quantity", required: true  %>
                 </div>
                 <div class="form-group">
                   <label>Category</label>
-                  <%= f.select(:category, [["Books","Books"], ["Magazines","Magazines"], ["Electronics","Electronics"], ["Hardware","Hardware"], ["Tools","Tools"]], {}, { :class => 'form-control' })%>
+                  <%= f.select(:category, [["Meat","Meat"], ["Beverage","Beverage"], ["Electronics","Electronics"], ["Hardware","Hardware"], ["Tools","Tools"], ["Other","Other"]], {}, { :class => 'form-control' })%>
                 </div>
               </div>
               <!-- /.box-body -->

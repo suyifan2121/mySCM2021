@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20210628172744) do
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
     t.string   "quantity"
     t.boolean  "status"
+    t.integer  "item_id"
     t.integer  "member_id"
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
@@ -77,18 +78,8 @@ ActiveRecord::Schema.define(version: 20210628172744) do
     t.boolean  "return"
     t.string   "return_date"
     t.decimal  "return_price",               precision: 10, scale: 2
+    t.index ["item_id"], name: "index_orders_on_item_id", using: :btree
     t.index ["member_id"], name: "index_orders_on_member_id", using: :btree
-  end
-
-  create_table "purchase_orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
-    t.string   "client"
-    t.integer  "quantity"
-    t.decimal  "price",      precision: 10, scale: 2
-    t.string   "items"
-    t.integer  "member_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.index ["member_id"], name: "index_purchase_orders_on_member_id", using: :btree
   end
 
   create_table "suppliers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3" do |t|
@@ -125,6 +116,6 @@ ActiveRecord::Schema.define(version: 20210628172744) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "orders", "items"
   add_foreign_key "orders", "members"
-  add_foreign_key "purchase_orders", "members"
 end
