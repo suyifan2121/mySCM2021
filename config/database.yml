@@ -2,7 +2,10 @@ default: &default
   adapter: mysql2
   host: localhost
   username: root
+  #local
   password: 
+  #use password while in gcp
+  #password: root
 
 development:
   <<: *default
