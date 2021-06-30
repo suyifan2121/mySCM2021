@@ -11,7 +11,7 @@ member = Member.create({ name: 'superadmin', email: 'superadmin@demo.com', phone
 User.create({ name: 'superadmin', email: 'superadmin@demo.com', superadmin_role: true, member: member, password: "change_me", remember_created_at: nil })
 
 # create system admin
-member = Member.create({ name: 'system_admin', email: 'system_admin@demo.com', phone: '01234567890', role: 'sysadmin'})
+member = Member.create({ name: 'sysadmin', email: 'sysadmin@demo.com', phone: '01234567890', role: 'sysadmin'})
 User.create({ name: 'sysadmin', email: 'sysadmin@demo.com', sysadmin_role: true, member: member, password: "change_me", remember_created_at: nil })
 
 # create purchasing agent

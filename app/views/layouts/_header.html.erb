@@ -63,71 +63,87 @@
         <% end %>
       </li>
 
+      <% if can? :create, Item %>
+        <li>
+          <a href="<%= purchase_history_path %>">
+            <i class="fa fa-shopping-cart"></i>
+            <span>Purchase Orders</span>
+          </a>
+        </li><li>
+          <a href="<%= sales_history_path %>">
+            <i class="fa fa-money"></i>
+            <span>Sales Orders</span>
+          </a>
+        </li>
+        <li>
+          <!-- remark: only user with item create permission can have access to this menu -->
+          <% if can? :create, Order %>
+            <a href=" <%= new_order_path %>">
+              <i class="fa fa-plus"></i>
+              <span>Create Order</span>
+            </a>
+          <% end %>
+        </li>
+      <% end %>
+
       <li>
-        <a href="<%= purchase_history_path %>">
-          <i class="fa fa-shopping-cart"></i>
-          <span>Purchase Orders</span>
-        </a>
-      </li><li>
-        <a href="<%= sales_history_path %>">
-          <i class="fa fa-money"></i>
-          <span>Sales Orders</span>
-        </a>
+        <% if can? :read, Supplier %>
+          <a href="<%= suppliers_path %>">
+            <i class="fa fa-user"></i>
+            <span>List Suppliers</span>
+          </a>
+        <% end %>
       </li>
       <li>
-        <!-- remark: only user with item create permission can have access to this menu -->
-        <% if can? :create, Order %>
-          <a href=" <%= new_order_path %>">
+        <% if can? :manage, Supplier %>
+          <a href="<%= new_supplier_path %>">
             <i class="fa fa-plus"></i>
-            <span>Create Order</span>
+            <span>Create Supplier</span>
           </a>
         <% end %>
       </li>
 
       <li>
-        <a href="<%= suppliers_path %>">
-          <i class="fa fa-user"></i>
-          <span>List Suppliers</span>
-        </a>
+        <% if can? :read, Client %>
+          <a href="<%= clients_path %>">
+            <i class="fa fa-user"></i>
+            <span>List Clients</span>
+          </a>
+        <% end %>
       </li>
       <li>
-        <a href="<%= new_supplier_path %>">
-          <i class="fa fa-plus"></i>
-          <span>Create Supplier</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="<%= clients_path %>">
-          <i class="fa fa-user"></i>
-          <span>List Clients</span>
-        </a>
-      </li>
-      <li>
-        <a href="<%= new_client_path %>">
-          <i class="fa fa-plus"></i>
-          <span>Create Client</span>
-        </a>
+        <% if can? :manage, Client %>
+          <a href="<%= new_client_path %>">
+            <i class="fa fa-plus"></i>
+            <span>Create Client</span>
+          </a>
+        <% end %>
       </li>
 
       <li>
-        <a href="<%= members_path %>">
-          <i class="fa fa-users"></i>
-          <span>List Members</span>
-        </a>
+        <% if can? :read, Member %>
+          <a href="<%= members_path %>">
+            <i class="fa fa-users"></i>
+            <span>List Members</span>
+          </a>
+        <% end %>
       </li>
       <li>
-        <a href="<%= new_member_path %>">
-          <i class="fa fa-user-plus"></i>
-          <span>Create Member</span>
-        </a>
+        <% if can? :manage, Member %>
+          <a href="<%= new_member_path %>">
+            <i class="fa fa-user-plus"></i>
+            <span>Create Member</span>
+          </a>
+        <% end %>
       </li>
 
       <li>
-        <a href="<%= view_report_path %>">
-          <i class="fa fa-bar-chart"></i>
-          <span>View Report</span>
-        </a>
+        <% if current_user.superadmin_role? || current_user.sysadmin_role? %>
+          <a href="<%= view_report_path %>">
+            <i class="fa fa-bar-chart"></i>
+            <span>View Report</span>
+          </a>
+        <% end %>
       </li>
     </ul>
   </section>

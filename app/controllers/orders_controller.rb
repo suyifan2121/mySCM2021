@@ -189,48 +189,16 @@ class OrdersController < ApplicationController
       if @order.save
         @current_user = current_user
         redirect_to :root, notice: 'Order was successfully created.'
-        begin
-          OrderMailer.delay.create_order(@order, @current_user).deliver
-        rescue Exception => e
-        end
       else
         render :new
       end
     end
-
-    # if Item.find_by_id(params[:order][:item_id]).remaining_quantity >= params[:order][:quantity].to_i
-    #   # params[:order][:status] = true
-    #   @order = Order.new(order_params)
-    #   if @order.save
-    #     @current_user = current_user
-    #     @borrowed_item = Item.find_by_id(params[:order][:item_id])
-    #     @borrowed_item.decrement!(:remaining_quantity, params[:order][:quantity].to_i)
-    #     redirect_to :root, notice: 'Order was successfully created.'
-    #     begin
-    #       OrderMailer.delay.create_order(@order, @current_user).deliver
-    #     rescue Exception => e
-    #     end
-    #   else
-    #     render :new
-    #   end
-    # else
-    #   flash[:alert] = 'The quantity you entered is not currently available'
-    #   redirect_to :back
-    # end
   end
 
   def destroy
-    borrowed_qty = @order.quantity.to_i
-    @borrowed_item = @order.item
-    @borrowed_item.increment!(:remaining_quantity, borrowed_qty)
-    @current_user = current_user
     @order.destroy
 
     redirect_to orders_url, notice: 'Order was successfully destroyed.'
-    begin
-      OrderMailer.delay.cancel_order(@order, @current_user).deliver
-    rescue Exception => e
-    end
   end
 
   private

@@ -9,6 +9,7 @@ class ClientsController < ApplicationController
   end
 
   def edit
+    @client = Client.find(params[:id])
   end
 
   def create
@@ -21,6 +22,7 @@ class ClientsController < ApplicationController
   end
 
   def update
+    @client = Client.find(params[:id])
     if @client.update(client_params)
       redirect_to :root, notice: 'Client was successfully updated.'
     else

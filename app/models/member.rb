@@ -21,4 +21,5 @@ class Member < ApplicationRecord
         return "Sales Agent"
       end
   end
+
 end

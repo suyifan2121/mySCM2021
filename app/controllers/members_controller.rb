@@ -33,10 +33,15 @@ class MembersController < ApplicationController
   end
 
   def update
-    if @member.update(member_params)
-      redirect_to :root, notice: 'Member was successfully updated.'
-    else
-      render :edit
+    ActiveRecord::Base.transaction do
+      if @member.update(member_params.except(:password, :password_confirmation))
+        # update user password
+        if @member.user.update(password: member_params[:password], password_confirmation: member_params[:password_confirmation])
+            redirect_to :root, notice: 'Member was successfully updated.'
+        end
+      else
+        render :edit
+      end
     end
   end
 

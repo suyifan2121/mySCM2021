@@ -1,6 +1,5 @@
 class SuppliersController < ApplicationController
   # load_and_authorize_resource
-  before_action :set_supplier, only: [:show, :edit, :update, :destroy]
 
   def index
     @suppliers = Supplier.all
@@ -12,6 +11,7 @@ class SuppliersController < ApplicationController
   end
 
   def edit
+    @supplier = Supplier.find(params[:id])
   end
 
   def create
@@ -24,6 +24,7 @@ class SuppliersController < ApplicationController
   end
 
   def update
+    @supplier = Supplier.find(params[:id])
     if @supplier.update(supplier_params)
       redirect_to :root, notice: 'Supplier was successfully updated.'
     else

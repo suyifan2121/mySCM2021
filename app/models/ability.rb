@@ -18,9 +18,25 @@ class Ability
     end
     if user.sysadmin_role?
       can :manage, Item
+      can :manage, Order
+      can :manage, User
+      can :manage, Member
     end
     if user.purchasingagent_role?
-      can :read, Item #should not be allowed to create new items in the inventory
+      can :read, Item
+      can :manage, Order
+      can :manage, Supplier
+    end
+    if user.salesagent_role?
+      can :read, Item
+      can :manage, Order
+      can :manage, Client
+    end
+    if user.inventoryadmin_role?
+      can :view, Order
+      can :edit, Order
+      can :update, Order
+      can :manage, Item
     end
     # The first argument to `can` is the action you are giving the user
     # permission to do.
