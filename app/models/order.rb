@@ -36,20 +36,6 @@ class Order < ApplicationRecord
     self.return
   end
 
-  # def self.expired?
-  #   Order.where("expire_at < ?", Date.today).where(status: true)
-  # end
-
-  # def self.renew id
-  #   @order = Order.where(id: id)
-  #   @order.update(expire_at: 7.days.from_now)
-  # end
-
-  def self.disable id
-    @order = Order.where(id: id)
-    @order.update(status: false)
-  end
-
   # custom function to get purchase_price to display purchase_price in MYR eg. 32.5 -> 32.50
   def get_purchase_price
     "RM #{sprintf "%.2f", self.purchase_price}" unless purchase_price.nil?
