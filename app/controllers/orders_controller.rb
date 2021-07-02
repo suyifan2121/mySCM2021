@@ -108,12 +108,12 @@ class OrdersController < ApplicationController
     @pending_sales_orders = @upcoming_sales.count
 
     # display total amount everyday for current month
-    @monthly_purchase = Order.where(order_type: "purchase").where(status: true).group_by_day_of_month(:created_at, format: "%d", range: Time.now.beginning_of_month ..Time.now.end_of_month).sum(:price)
-    @monthly_sales = Order.where(order_type: "sales").where(status: true).group_by_day_of_month(:created_at, format: "%d", range: Time.now.beginning_of_month ..Time.now.end_of_month).sum(:price)
+    @monthly_purchase = Order.where(order_type: "purchase").where(status: true).group_by_day_of_month(:date, format: "%d", range: Time.now.beginning_of_month ..Time.now.end_of_month).sum(:price)
+    @monthly_sales = Order.where(order_type: "sales").where(status: true).group_by_day_of_month(:date, format: "%d", range: Time.now.beginning_of_month ..Time.now.end_of_month).sum(:price)
 
     # display total amount everyday for current year
-    @yearly_purchase = Order.where(order_type: "purchase").where(status: true).group_by_month_of_year(:created_at, format: "%B", range: Time.now.beginning_of_year ..Time.now.end_of_year).sum(:price)
-    @yearly_sales = Order.where(order_type: "sales").where(status: true).group_by_month_of_year(:created_at, format: "%B", range: Time.now.beginning_of_year ..Time.now.end_of_year).sum(:price)
+    @yearly_purchase = Order.where(order_type: "purchase").where(status: true).group_by_month_of_year(:date, format: "%B", range: Time.now.beginning_of_year ..Time.now.end_of_year).sum(:price)
+    @yearly_sales = Order.where(order_type: "sales").where(status: true).group_by_month_of_year(:date, format: "%B", range: Time.now.beginning_of_year ..Time.now.end_of_year).sum(:price)
   end
 
   # update is used to mark an order as a return order
