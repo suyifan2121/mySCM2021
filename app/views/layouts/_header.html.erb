@@ -65,15 +65,19 @@
 
       <% if can? :create, Order %>
         <li>
-          <a href="<%= purchase_history_path %>">
-            <i class="fa fa-shopping-cart"></i>
-            <span>Purchase Orders</span>
-          </a>
+          <% if current_user.superadmin_role? || current_user.sysadmin_role? || current_user.inventoryadmin_role? || current_user.purchasingagent_role?%>
+            <a href="<%= purchase_history_path %>">
+              <i class="fa fa-shopping-cart"></i>
+              <span>Purchase Orders</span>
+            </a>
+          <% end %>
         </li><li>
-          <a href="<%= sales_history_path %>">
-            <i class="fa fa-money"></i>
-            <span>Sales Orders</span>
-          </a>
+          <% if current_user.superadmin_role? || current_user.sysadmin_role? || current_user.inventoryadmin_role? || current_user.salesagent_role?%>
+            <a href="<%= sales_history_path %>">
+              <i class="fa fa-money"></i>
+              <span>Sales Orders</span>
+            </a>
+          <% end %>
         </li>
         <li>
           <!-- remark: only user with item create permission can have access to this menu -->
