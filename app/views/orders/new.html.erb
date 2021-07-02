@@ -39,7 +39,18 @@
                 <div class="box-body">
                   <div class="form-group">
                     <label>Order Type</label>
-                    <%= f.select(:order_type, [["Purchase","purchase"], ["Sales","sales"]], {}, { :class => 'form-control' })%>
+                    <!-- if superadmin can see both -->
+                    <% if current_user.superadmin_role? %>
+                      <%= f.select(:order_type, [["Purchase","purchase"], ["Sales","sales"]], {}, { :class => 'form-control' })%>
+                    <% end %>
+                    <!-- if purchasing agent can only see purchase -->
+                    <% if current_user.purchasingagent_role? %>
+                      <%= f.select(:order_type, [["Purchase","purchase"]], {}, { :class => 'form-control' })%>
+                    <% end %>
+                    <!-- if sales agent can only see sales -->
+                    <% if current_user.salesagent_role? %>
+                      <%= f.select(:order_type, [["Sales","sales"]], {}, { :class => 'form-control' })%>
+                    <% end %>
                   </div>
                   <div class="box-body">
                     <div class="form-group">
@@ -167,6 +178,7 @@
         $.widget.bridge('uibutton', $.ui.button);
         $('.datepicker').datepicker({format: 'yyyy/mm/dd'});
 
+        initiate_form_type();
         show_form_type();
         calculate_purchase_price();
         calculate_sales_price();
@@ -360,6 +372,45 @@
         });
        
         return JSON.stringify(item_list_json);
+      }
+
+      function initiate_form_type()
+      {
+        var order_type = $("#order_order_type").find(":selected").val();
+
+        // hide fields unrelated to sales
+        if(order_type == "sales")
+        {
+          $('#client_name').show();
+          $('#supplier_name').hide();
+
+          $('#order_client').attr('required',true);
+          $('#order_supplier').removeAttr('required');
+
+          $('#sales_form').show();
+          $('#purchase_form').hide();
+
+          $('#sales_commodity_table').show();
+          $('#purchase_commodity_table').hide();
+
+          $('#order_order_type').val("sales");
+        }
+        else 
+        {
+          $('#supplier_name').show();
+          $('#client_name').hide();
+
+          $('#order_supplier').attr('required',true);
+          $('#order_client').removeAttr('required');
+
+          $('#purchase_form').show();
+          $('#sales_form').hide();
+
+          $('#purchase_commodity_table').show();
+          $('#sales_commodity_table').hide();
+
+          $('#order_order_type').val("purchase");
+        }
       }
 
       function show_form_type()

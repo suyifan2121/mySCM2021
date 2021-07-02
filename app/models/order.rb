@@ -5,7 +5,7 @@ class Order < ApplicationRecord
   # validates :expire_at, presence: true
   validates :member_id, presence: true
 
-  attr_accessor :item_list, :order_date, :purchase_items, :sales_items
+  attr_accessor :item_list, :order_date, :purchase_items, :sales_items, :sales_or_purchase
 
   def self.verified?
     @order = Order.where(id: id)

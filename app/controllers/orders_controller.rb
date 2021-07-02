@@ -167,7 +167,7 @@ class OrdersController < ApplicationController
     ActiveRecord::Base.transaction do
       order_items.each do |item|
         # increase commodity count for purchase orders
-        if params[:order].has_key?(:supplier)
+        if params[:order][:order_type] == "purchase"
           @ordered_item = Item.find_by_id(item["id"].to_i)
           @ordered_item.increment!(:remaining_quantity, item["quantity"].to_i)
         else # decrease for sales orders

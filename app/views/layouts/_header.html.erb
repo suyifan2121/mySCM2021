@@ -63,7 +63,7 @@
         <% end %>
       </li>
 
-      <% if can? :create, Item %>
+      <% if can? :create, Order %>
         <li>
           <a href="<%= purchase_history_path %>">
             <i class="fa fa-shopping-cart"></i>
@@ -77,7 +77,7 @@
         </li>
         <li>
           <!-- remark: only user with item create permission can have access to this menu -->
-          <% if can? :create, Order %>
+          <% if can? :manage, Order %>
             <a href=" <%= new_order_path %>">
               <i class="fa fa-plus"></i>
               <span>Create Order</span>
