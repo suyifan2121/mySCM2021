@@ -63,7 +63,7 @@
         <% end %>
       </li>
 
-      <% if can? :create, Order %>
+      <% if can? :view, Order %>
         <li>
           <% if current_user.superadmin_role? || current_user.sysadmin_role? || current_user.inventoryadmin_role? || current_user.purchasingagent_role?%>
             <a href="<%= purchase_history_path %>">
