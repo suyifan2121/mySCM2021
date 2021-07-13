@@ -118,10 +118,10 @@ class OrdersController < ApplicationController
 
   # update is used to mark an order as a return order
   def update
-    puts "params: #{params.to_hash}"
+    # puts "params: #{params.to_hash}"
     return_order_items = JSON.parse(params[:order][:items]) 
 
-    puts "Params: #{return_order_items}"
+    # puts "Params: #{return_order_items}"
 
     @order = Order.find(params[:id])
 
@@ -162,7 +162,7 @@ class OrdersController < ApplicationController
 
     order_items = JSON.parse(params[:order][:items]) 
 
-    puts "Params: #{order_params.to_hash}"
+    # puts "Params: #{order_params.to_hash}"
 
     ActiveRecord::Base.transaction do
       order_items.each do |item|

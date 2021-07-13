@@ -33,6 +33,7 @@ class SuppliersController < ApplicationController
   end
 
   def destroy
+      @supplier = Supplier.find(params[:id])
       @supplier.destroy
       redirect_to :root, notice: 'Supplier was successfully destroyed.'
   end
